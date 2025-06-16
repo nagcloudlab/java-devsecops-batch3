@@ -7,10 +7,10 @@ import com.npci.model.Account;
  * author : Foo team
  */
 
-public class SqlAccountRepository {
+public class NoSqlAccountRepository  implements AccountRepository {
 
-    public SqlAccountRepository(){
-        System.out.println("SqlAccountRepository initialized");
+    public NoSqlAccountRepository(){
+        System.out.println("NoSqlAccountRepository initialized");
     }
 
     public Account loadAccount(String number) {

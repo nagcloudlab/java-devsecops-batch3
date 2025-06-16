@@ -7,7 +7,11 @@ import com.npci.model.Account;
  * author : Foo team
  */
 
-public class SqlAccountRepository {
+public class SqlAccountRepository implements AccountRepository {
+
+    String dbUrl = "jdbc:postgresql://localhost:5432/postgres";
+    String username = "postgres";
+    String password = System.getenv("POSTGRESQL_PASSWORD");
 
     public SqlAccountRepository(){
         System.out.println("SqlAccountRepository initialized");
