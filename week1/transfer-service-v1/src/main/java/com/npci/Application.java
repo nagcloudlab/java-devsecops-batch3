@@ -2,7 +2,6 @@ package com.npci;
 
 import com.npci.repository.AccountRepository;
 import com.npci.repository.AccountRepositoryFactory;
-import com.npci.repository.SqlAccountRepository;
 import com.npci.service.UPITransferService;
 
 public class Application {
@@ -35,3 +34,4 @@ public class Application {
     }
 
 }
+

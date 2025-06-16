@@ -1,0 +1,31 @@
+
+
+-------------------------------
+1. project, e.g. "my_project"
+-------------------------------
+
+my_project
+|
+|
+|------ package1 (.java / .class )
+|
+|
+|------ package2
+|  |
+|  |------ subpackage1
+
+
+-------------------------------
+2. java file, e.g. ".java"
+-------------------------------
+
+-------------------------
+| PublicType.java
+|-------------------------
+| // package declaration (one and optional)
+| // import statements (more and optional)
+| // public Type ( interface | class | enum | annotation | record ) (one and must)
+| // default Types (more and optional)
+|-------------------------
+
+-----------------------------------------------
