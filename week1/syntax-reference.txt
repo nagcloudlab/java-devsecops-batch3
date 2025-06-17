@@ -33,7 +33,6 @@ my_project
 3. package declaration
 -----------------------------------------------------
 
-why we need it?
 - to group related data types together
 - to avoid name conflicts
 - to control access
@@ -41,7 +40,11 @@ why we need it?
 syntax:
 package package_name;
 
-recommendation for package naming:
+recommendation:
+- use reverse domain name notation
+- use lowercase letters for package names
+- use meaningful names that reflect the project structure
+- use a consistent naming convention
 
 e.g Account.java
 - module   : module1
@@ -58,7 +61,6 @@ package com.npci.my_project.module1;
 4. import statements
 -----------------------------------------------------
 
-why we need it?
 - to use types from other packages
 - to avoid fully qualified type names
 
@@ -103,23 +105,20 @@ what is an object?
 
   object = State + Behavior + Identity
 
-  to  create many similar objects, we use a template called 'class'.
+---------------------------------------------------------
+  
+-> to  create many similar objects, we use a template called 'class'.
 
 -----------------------------------------------------
-object's concepts
+Object's concepts
 -----------------------------------------------------
-
 
 a. frontend | interface | abstraction
-
-  why we need it?
 
   -> for easy to use/learn by dependent
   -> for lossely coupled design
 
 b. backend | implementation | encapsulation
-
-  why we need it?
 
   -> to hide the complexity
   -> to protect the data
@@ -127,21 +126,15 @@ b. backend | implementation | encapsulation
 
 c. inheritance (IS-A)
 
-   why we need it?
-
     -> re-use common code(state & behavior) 
        from generalized type to specialized type
 
 d. polymorphism
 
-    why we need it?
-  
     -> to use a single interface for multiple types
     -> to achieve dynamic behavior at runtime
 
 d. composition ( HAS-A )
-
-    why we need it?
 
     -> to build complex objects from simpler ones
     -> to achieve code reusability without inheritance    
@@ -198,12 +191,12 @@ Nested Types
 3. enum
 -----------------------------
 
-why we need it?
 - to define a fixed set of constants
 - to provide type safety
 
 
 syntax:
+
 __________ enum Name [implements InterfaceName1, InterfaceName2, ...] {
           // public constant data members (fields)
           // constructors (optional)
@@ -214,7 +207,6 @@ __________ enum Name [implements InterfaceName1, InterfaceName2, ...] {
 4. annotation
 -----------------------------
 
-why we need it?
 - to provide metadata about the code
 - to influence the behavior of the code at runtime
 
@@ -234,26 +226,24 @@ By Type:
 2. primitive type ( boolean | byte | char | short | int | long | float | double ) => values
 
 By Scope:
-1. class level (fields) - for class's state
-2. object level (instance variables) - for object's state
-3. method level (local variables) - for temporary data
+1. class level   - for class's state
+2. object level  - for object's state
+3. method level  - for temporary data
 
 __________  __________ Type varName= [object's reference | value ]
 [private  ]  [static] 
 [         ]  [final]
 [protected]  [transient]
 [         ]  [volatile]
+
   - local variable-
 ------------------------------
 Nil          [final]  
 
 
-
-
 ------------------------------------------------------
 7. method declaration syntax
 ------------------------------------------------------
-
 
 ReturnType:
 
@@ -276,15 +266,12 @@ ReturnType:
 7. constructor declaration syntax
 ------------------------------------------------------
 
-
 in java , object creation is 2 step process:
-
 
 step 1: memory allocation -> new keyword
 step 2: initialization -> constructor
 
-new Constructor() => object 
-
+object ==> new Constructor() 
 
 syntax:
 __________ __________   ClassName( parameterType1 paramName1, parameterType2 paramName2, ... )[throws ExceptionType1, ExceptionType2, ...] {
@@ -295,19 +282,16 @@ __________ __________   ClassName( parameterType1 paramName1, parameterType2 par
 
                        }
 
-
 ------------------------------------------------------
 
-data  aka types
+in java, there are two types of data:
 
   => value data  => primitive types
   => reference data => user defined types (interface | class | enum | annotation | record)
 
 ------------------------------------------------------
-
-
-
 Naming Conventions:
+------------------------------------------------------
 
 1. package name: 
    - all lowercase
