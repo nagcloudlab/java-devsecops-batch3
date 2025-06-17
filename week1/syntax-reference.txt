@@ -1,31 +1,331 @@
 
 
--------------------------------
-1. project, e.g. "my_project"
--------------------------------
+-----------------------------------------------------
+1. project: my_project
+-----------------------------------------------------
+
 
 my_project
 |
+|---- package1 ( .java / .class )
 |
-|------ package1 (.java / .class )
 |
-|
-|------ package2
+|---- package2
 |  |
-|  |------ subpackage1
+|  |---- subpackage1
 
 
--------------------------------
-2. java file, e.g. ".java"
--------------------------------
+-----------------------------------------------------
+2. java file structure (.java)
+-----------------------------------------------------
 
--------------------------
+-----------------------------
 | PublicType.java
-|-------------------------
-| // package declaration (one and optional)
-| // import statements (more and optional)
-| // public Type ( interface | class | enum | annotation | record ) (one and must)
-| // default Types (more and optional)
-|-------------------------
+|----------------------------
+|// package declaration (1) - optional
+|// import statements (n) - optional
+|// public Type Name( interface | class | enum |annotation ) (1) - must
+|// default Types Name(n) - optional
+|-----------------------------
 
------------------------------------------------
+
+-----------------------------------------------------
+3. package declaration
+-----------------------------------------------------
+
+why we need it?
+- to group related data types together
+- to avoid name conflicts
+- to control access
+
+syntax:
+package package_name;
+
+recommendation for package naming:
+
+e.g Account.java
+- module   : module1
+- project  : my_project
+- company  : npci
+- type     : com
+
+package companytype.companyname.projectname.modulename;
+package com.npci.my_project.module1;
+
+
+
+-----------------------------------------------------
+4. import statements
+-----------------------------------------------------
+
+why we need it?
+- to use types from other packages
+- to avoid fully qualified type names
+
+syntax:
+import package_name.TypeName; // for a single type
+import package_name.*; // for all types in the package
+
+my_project
+|
+|---- package1
+|  |---- Type1.java
+|  |---- Type2.java
+|
+|---- package2
+|  |---- Type3.java
+|  |---- Type4.java
+   | ---- subpackage1
+      |---- Type5.java
+
+
+package package1;
+//import package2.Type3; // import Type3 from package2
+//import package2.*; // import all types from package2
+import package2.subpackage1.Type5; // import Type5 from package2.subpackage1
+class Type1 {
+    // code
+    Type2 type2; // Type2 is in package1
+    Type3 type3; // Type3 is in package2
+    Type4 type4; // Type4 is in package2
+    Type5 type5; // Type5 is in package2.subpackage1
+}
+
+-----------------------------------------------------
+object's theory
+-----------------------------------------------------
+
+what is an object?
+
+  - data|info|properties|fields|attributes -> State
+  - function|method|operation|work         -> Behavior
+  - address|location|reference             -> Identity
+
+  object = State + Behavior + Identity
+
+  to  create many similar objects, we use a template called 'class'.
+
+-----------------------------------------------------
+object's concepts
+-----------------------------------------------------
+
+
+a. frontend | interface | abstraction
+
+  why we need it?
+
+  -> for easy to use/learn by dependent
+  -> for lossely coupled design
+
+b. backend | implementation | encapsulation
+
+  why we need it?
+
+  -> to hide the complexity
+  -> to protect the data
+  -> to control the access  
+
+c. inheritance (IS-A)
+
+   why we need it?
+
+    -> re-use common code(state & behavior) 
+       from generalized type to specialized type
+
+d. polymorphism
+
+    why we need it?
+  
+    -> to use a single interface for multiple types
+    -> to achieve dynamic behavior at runtime
+
+d. composition ( HAS-A )
+
+    why we need it?
+
+    -> to build complex objects from simpler ones
+    -> to achieve code reusability without inheritance    
+
+------------------------------------------------------
+object -> type of data
+------------------------------------------------------
+
+java has 5 user defined data types:
+1. interface
+2. class
+3. enum
+4. annotation
+5. record (java 14+)
+
+------------------------------------------------------
+5. type declaration syntax
+------------------------------------------------------
+
+-----------------------------
+1. interface
+-----------------------------
+
+
+__________ interface Name [extends InterfaceName1, InterfaceName2, ...] {
+[private  ]  // public constant data members (fields)
+[         ]  // public abstract methods (no body)
+[protected]  // java 8+
+[public   ]  // default methods (with body)
+             // static methods (with body)
+             // private methods (with body)
+            }
+
+-----------------------------
+2. class
+-----------------------------
+
+
+__________ __________ class Name [extends SuperClassName] [implements InterfaceName1, InterfaceName2, ...] {
+[        ] [abstract]    // variables (fields) - for object's state
+[public  ] [final   ]    // constructors - for object creation
+           [strictfp]    // methods - for object's behavior
+
+Nested Types
+---------------------          
+           [static]      
+[private  ]
+[         ]
+[protected]
+[public   ]              }
+
+
+-----------------------------
+3. enum
+-----------------------------
+
+why we need it?
+- to define a fixed set of constants
+- to provide type safety
+
+
+syntax:
+__________ enum Name [implements InterfaceName1, InterfaceName2, ...] {
+          // public constant data members (fields)
+          // constructors (optional)
+          // methods (with body)
+}
+
+-----------------------------
+4. annotation
+-----------------------------
+
+why we need it?
+- to provide metadata about the code
+- to influence the behavior of the code at runtime
+
+
+syntax:
+__________ @interface Name [extends InterfaceName1, InterfaceName2, ...] {
+          // public constant data members (fields)
+          // methods (no body)
+}
+
+------------------------------------------------------
+6. variable declaration syntax
+------------------------------------------------------
+
+By Type:
+1. reference type ( interface | class | enum | annotation ) => objects
+2. primitive type ( boolean | byte | char | short | int | long | float | double ) => values
+
+By Scope:
+1. class level (fields) - for class's state
+2. object level (instance variables) - for object's state
+3. method level (local variables) - for temporary data
+
+__________  __________ Type varName= [object's reference | value ]
+[private  ]  [static] 
+[         ]  [final]
+[protected]  [transient]
+[         ]  [volatile]
+  - local variable-
+------------------------------
+Nil          [final]  
+
+
+
+
+------------------------------------------------------
+7. method declaration syntax
+------------------------------------------------------
+
+
+ReturnType:
+
+  -> void
+  -> primitive type (boolean | byte | char | short | int | long | float | double)
+  -> reference type (interface | class | enum | annotation)
+
+
+  ___________ __________   ReturnType methodName( parameterType1 paramName1, parameterType2 paramName2, ... )[throws ExceptionType1, ExceptionType2, ...] {
+  [private  ]  [static]        //...
+  [         ]  [final ]        // A,R,L and assignment operations
+  [protected]  [synchronized]  // conditional statements
+  [public   ]  [strictfp]      // loops
+               [abstract]      // invocation of other methods
+               [native]        // result | side-effects
+                              [return] result
+                            }
+
+------------------------------------------------------
+7. constructor declaration syntax
+------------------------------------------------------
+
+
+in java , object creation is 2 step process:
+
+
+step 1: memory allocation -> new keyword
+step 2: initialization -> constructor
+
+new Constructor() => object 
+
+
+syntax:
+__________ __________   ClassName( parameterType1 paramName1, parameterType2 paramName2, ... )[throws ExceptionType1, ExceptionType2, ...] {
+[private  ]  
+[         ]                initialization code
+[protected]
+[public   ]
+
+                       }
+
+
+------------------------------------------------------
+
+data  aka types
+
+  => value data  => primitive types
+  => reference data => user defined types (interface | class | enum | annotation | record)
+
+------------------------------------------------------
+
+
+
+Naming Conventions:
+
+1. package name: 
+   - all lowercase
+   - use dot notation for sub-packages
+   - e.g., com.npci.my_project.module1
+
+2. Types Names ( interface | class | enum | annotation | record ):
+   - PascalCase (UpperCamelCase)
+   - start with an uppercase letter
+   - e.g., MyClass, MyInterface, MyEnum, MyAnnotation, MyRecord
+
+3. Variable/Method Names:
+    - camelCase (lowerCamelCase)
+    - start with a lowercase letter
+    - e.g., myVariable, myMethod
+
+4. Constants (public static final variables):
+   - UPPER_CASE_WITH_UNDERSCORES
+   - e.g., MAX_VALUE, DEFAULT_TIMEOUT
+
+------------------------------------------------------   
