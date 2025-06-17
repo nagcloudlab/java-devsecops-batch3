@@ -1,0 +1,6 @@
+
+
+2 types of data types in Java
+------------------------------
+1. Primitive Data Types
+2. Reference Data Types
