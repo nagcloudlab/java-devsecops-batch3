@@ -7,6 +7,7 @@ import com.npci.drive.wheel.Wheel;
 // how to implement above principle?
 // dependent & dependencies must separated by interfaces
 public class Car {
+
     private Wheel wheel;
 
     public Car(Wheel wheel) {
@@ -22,4 +23,5 @@ public class Car {
         int rpm = wheel.rotate(100);
         System.out.println("Car is moving with rpm: " + rpm);
     }
+
 }
