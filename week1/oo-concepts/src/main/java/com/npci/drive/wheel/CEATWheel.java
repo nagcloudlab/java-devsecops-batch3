@@ -1,13 +1,15 @@
 package com.npci.drive.wheel;
 
-public class MRFWheel {
+public class CEATWheel implements Wheel {
 
-    public MRFWheel() {
-        System.out.println("MRF-Wheel is created");
+    public CEATWheel() {
+        System.out.println("CEAT-Wheel is created");
     }
-    public MRFWheel(double balance) {}
 
-    public void rotate() {
-        System.out.println("MRF-Wheel is rotating");
+    public int rotate(int speed) {
+        System.out.println("CEAT-Wheel is rotating");
+        // Example logic for rotation
+        int rpm = speed * 3; // Assuming CEAT wheel has a different rotation logic
+        return rpm;
     }
 }

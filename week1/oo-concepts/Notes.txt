@@ -11,6 +11,7 @@ object  - concepts
  -----------------------------------
 
  how to apply these concepts ( abstraction & encapsulation ) incode?
+
  -> access modifiers
     -> public
     -> private
@@ -20,6 +21,7 @@ object  - concepts
     -> getters
     -> setters
  -> interface & abstract class
+
 
 -----------------------------------
 access modifiers
@@ -47,4 +49,32 @@ my_project
  protected      Y       |     Y     |      Y     |     Y        |      N
  public         Y       |     Y     |      Y     |     Y        |      Y
 
+
+
+
 ---------------------------------------------------------------------------
+acessor methods
+---------------------------------------------------------------------------
+
+ - getters
+    -> public methods that return the value of a private field
+    -> used to access private fields from outside the class
+
+ -  setters
+    -> public methods that set the value of a private field
+    -> used to modify private fields from outside the class
+
+    Note : Use 'lombok' library to avoid boilerplate code for getters and setters
+
+ ---------------------------------------------------------------------------
+interface
+---------------------------------------------------------------------------
+
+e.g DriveApp
+
+    - MRFWheel
+       - rotate()
+    - Car
+       - move()
+
+ ---------------------------------------------------------------------------
