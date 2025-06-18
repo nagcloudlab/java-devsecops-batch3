@@ -1,10 +1,10 @@
 package com.npci.bank;
 
-public class TransactionProcessor {
 
+// Open/Closed Principle (OCP)  => polymorphic object
+public class TransactionProcessor {
     void processTransaction(BankTransaction transaction) {
         transaction.process();
         transaction.getDetails();
     }
-
 }

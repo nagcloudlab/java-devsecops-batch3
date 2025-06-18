@@ -5,8 +5,9 @@ object  - concepts
 ---------------------
     -> abstraction
     -> encapsulation
-    -> inheritance
     -> polymorphism
+    -> inheritance
+
 
  -----------------------------------
 
@@ -66,15 +67,23 @@ acessor methods
 
     Note : Use 'lombok' library to avoid boilerplate code for getters and setters
 
- ---------------------------------------------------------------------------
+---------------------------------------------------------------------------
 interface
 ---------------------------------------------------------------------------
 
-e.g DriveApp
+why we use interfaces?
+    -> to define a contract that classes must adhere to
+    -> to achieve abstraction and polymorphism
 
-    - MRFWheel
-       - rotate()
-    - Car
-       - move()
+
 
  ---------------------------------------------------------------------------
+ Inheritance
+---------------------------------------------------------------------------
+
+why we need?
+
+-> re-use common variables and methods,
+   from generalized class to specialized class
+
+---------------------------------------------------------------------------
