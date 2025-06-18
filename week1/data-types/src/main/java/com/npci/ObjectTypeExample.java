@@ -40,7 +40,7 @@ class Account {
     }
 }
 
-public class ObjectTypesExample {
+public class ObjectTypeExample {
     public static void main(String[] args) {
 
         Account account1 = new Account(123);
