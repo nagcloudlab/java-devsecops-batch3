@@ -1,4 +1,4 @@
-package com.npci.live1;
+package com.npci.live;
 
 // Open/Closed Principle (OCP)
 public class God {

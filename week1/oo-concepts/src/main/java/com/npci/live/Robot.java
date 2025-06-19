@@ -1,4 +1,4 @@
-package com.npci.live1;
+package com.npci.live;
 
 public class Robot extends LivingThing {
     public void eat() {

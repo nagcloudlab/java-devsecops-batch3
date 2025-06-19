@@ -1,4 +1,7 @@
 package com.npci.util;
 
-public class AbstractList {
+public abstract class AbstractList implements List{
+    public void clear() {
+
+    }
 }

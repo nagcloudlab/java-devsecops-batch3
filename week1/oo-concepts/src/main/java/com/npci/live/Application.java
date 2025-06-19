@@ -1,4 +1,4 @@
-package com.npci.live1;
+package com.npci.live;
 
 public class Application {
     public static void main(String[] args) {

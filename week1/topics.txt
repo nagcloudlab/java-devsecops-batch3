@@ -3,7 +3,7 @@
 ✅- Java-syntax-reference
 ✅- Data-types
 ✅- OO concepts
-- OO principles
+✅- OO principles
 - OO design patterns  ( popular ones )
 - how to handle exceptions
 - Java collections framework

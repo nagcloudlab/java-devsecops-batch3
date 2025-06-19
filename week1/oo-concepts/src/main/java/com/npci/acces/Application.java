@@ -1,7 +1,4 @@
-package com.npci.access_modifiers;
-
-import com.npci.access_modifiers.package1.A;
-import com.npci.access_modifiers.package1.B;
+package com.npci.acces;
 
 public class Application {
     public static void main(String[] args) {

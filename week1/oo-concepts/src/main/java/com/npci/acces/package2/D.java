@@ -1,7 +1,7 @@
-package com.npci.access_modifiers.package2;
+package com.npci.acces.package2;
 
 
-import com.npci.access_modifiers.package1.A;
+import com.npci.acces.package1.A;
 
 /**
  * author: Npci-dev-4

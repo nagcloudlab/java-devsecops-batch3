@@ -1,4 +1,4 @@
-package com.npci.access_modifiers.package1;
+package com.npci.acces.package1;
 
 
 /**

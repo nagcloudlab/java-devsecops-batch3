@@ -1,4 +1,5 @@
 package com.npci.util;
 
-public interface Set {
+public interface Set extends Collection{
+    //..
 }

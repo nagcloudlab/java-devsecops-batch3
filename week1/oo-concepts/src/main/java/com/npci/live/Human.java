@@ -1,4 +1,4 @@
-package com.npci.live1;
+package com.npci.live;
 
 public class Human extends LivingThing {
 

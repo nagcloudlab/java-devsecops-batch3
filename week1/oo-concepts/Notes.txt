@@ -87,3 +87,50 @@ why we need?
    from generalized class to specialized class
 
 ---------------------------------------------------------------------------
+Interface vs Abstract Class
+---------------------------------------------------------------------------
+
+
+similarities
+
+   - for both types , we cant create an instance
+
+
+ syntax differences
+
+    - interface  : no constructor,
+    - interface  : constant variables (public static final)
+    - interface  : can have only abstract methods (public abstract)  ( till java-7 )
+    - interface  : can have default methods (from java-8)
+
+    - abstract class : can have constructor
+    - abstract class : can have non-final variables (public, protected, private)
+    - abstract class : can have both abstract and non-abstract methods (till java-7)
+
+
+
+---------------------------------------------------------------------------
+recommended object design
+---------------------------------------------------------------------------
+
+top|design|api-level-coding :  Interface  (  Abstraction )
+middle|implementation-level-coding : Abstract Class  ( Partial Abstraction ) - Optional
+bottom|implementation|coding :  Concrete class(s) ( Full Implementation )
+
+---------------------------------------------------------------------------
+
+data-structure aka collections
+
+top-level: Interface
+    - Collection
+        - List -> index based
+        - Set  -> no-index, no-duplicates
+middle-level: AbstractList
+bottom-level:  Concrete class
+
+           - ArrayList
+           - LinkedList
+
+
+
+
