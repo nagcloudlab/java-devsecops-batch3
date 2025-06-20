@@ -1,4 +1,4 @@
-package com.npci.structural;
+package com.npci.structural.proxy;
 
 
 /*

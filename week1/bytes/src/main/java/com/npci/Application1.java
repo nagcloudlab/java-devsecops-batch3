@@ -2,8 +2,7 @@ package com.npci;
 
 class Person {
 
-    static int count = 0; // object variables
-
+    static int count = 0; // class variables
     int id; // 0
     String name; // null
     //int count = 0; // object variables
