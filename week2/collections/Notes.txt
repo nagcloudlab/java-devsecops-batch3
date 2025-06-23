@@ -1,0 +1,104 @@
+
+
+---------------------------------------------------------------------------------
+data structure & algorithms
+---------------------------------------------------------------------------------
+
+ => memory-layout,for data, to do 'crudss' operations
+
+ c-> create
+ r-> retrieve
+ u-> update
+ d-> delete
+ s-> sort
+ s-> search
+
+
+ 1. primary data-structure => can hold one data element.
+
+    -> byte,short,int,long,float,double,char,boolean
+    -> reference
+
+2. secondary data-structure => can hols multiple data elements
+
+    a. linear
+        - array
+        - linked
+        ..
+    b. non-linear
+        - tree
+        - graph
+
+     ..
+
+-------------------------------------------------------------------
+What is collection?
+-------------------------------------------------------------------
+
+=> ready to use data-structure, which can hold multiple data elements.
+   from java community.
+
+
+-------------------------------------------------------------------
+Collection framework
+-------------------------------------------------------------------
+Types of collections:
+
+1. List
+    - index based
+    - ordered output
+    - hold duplicates
+2. Queue
+    - FIFO
+3. Set
+    -> unique data elements
+    -> No index
+4. Map
+    - key + value pair
+        key -> user-defined-identity
+        key -> key must be unique
+
+-------------------------------------------------------------------
+Collection Hierarchy
+-------------------------------------------------------------------
+
+Interfaces
+-------------
+
+Iterable
+    - Collection
+        - List
+        - Queue
+        -Set
+Map
+
+
+Implementations
+-------------
+
+    List  -> ordered output, index based, duplicates allowed
+        - Vector     -> dynamic-array & synchronized
+            - Stack  -> LIFO
+        - ArrayList  -> dynamic-array
+        - LinkedList -> doubly-linked-list
+
+    Queue -> FIFO
+
+        - LinkedList
+        - PriorityQueue
+        - Dequeue
+
+    Set -> unique data elements, no index, unordered output
+
+        - TreeSet       -> b-tree (red-black tree)  -> sorted output
+        - HashSet       -> hash-table               -> un-ordered output
+        - LinkedHashSet -> hash-table + linked-list -> insertion order aka ordered output
+
+    Map -> user-defined identity, key + value pair, key must be unique
+
+       - TreeMap  -> b-tree (red-black tree)  -> sorted output
+       - HashMap  -> hash-table               -> un-ordered output
+       - LinkedHashMap -> hash-table + linked-list -> insertion order aka ordered output
+       - Hashtable -> hash-table + synchronized -> un-ordered output
+       - Properties -> key + value pair, key is string, value is object, synchronized
+

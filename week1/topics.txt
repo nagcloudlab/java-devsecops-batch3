@@ -6,6 +6,7 @@
 ✅- OO principles
 ✅- OO design patterns  ( popular ones )
 ✅- how to handle exceptions
+
 - Java collections framework
 - Java functional programming and streams ( Modern Java )
 - Java concurrency
