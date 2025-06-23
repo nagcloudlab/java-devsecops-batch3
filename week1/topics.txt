@@ -7,7 +7,7 @@
 ✅- OO design patterns  ( popular ones )
 ✅- how to handle exceptions
 - Java collections framework
-- Java functional programming and streams
+- Java functional programming and streams ( Modern Java )
 - Java concurrency
 - Java I/O (Input/Output)
 - Java networking
