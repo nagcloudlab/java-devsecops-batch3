@@ -1,10 +1,21 @@
 package com.npci.model;
 
+import java.util.Objects;
+
 public class Account extends Object implements Comparable<Account> {
 
     private String accountNumber;
     private String accountHolderName;
     private double balance;
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Account account)) return false;
+        return Objects.equals(accountNumber, account.accountNumber) && Objects.equals(accountHolderName, account.accountHolderName);
+    }
+
+    public int hashCode() {
+        return Objects.hash(accountNumber, accountHolderName);
+    }
 
     public int compareTo(Account o) {
         return this.accountNumber.compareTo(o.accountNumber);
