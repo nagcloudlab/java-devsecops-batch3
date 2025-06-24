@@ -19,8 +19,10 @@ import java.util.List;
 
 // Intention
 
+// Why_We_Need_Function
+// To write concise code
 
-public class InventoryApplication {
+public class Why_We_Need_Function {
     public static void main(String[] args) {
 
         List<Apple> appleInventory = List.of(
