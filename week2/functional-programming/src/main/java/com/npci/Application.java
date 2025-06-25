@@ -71,8 +71,17 @@ public class Application {
 
 
         // Req-3 : sort all transactions by amount in desc order
-        output = TransactionLib.sort(transactions, (t1, t2) -> Double.compare(t2.getAmount(), t1.getAmount()));
+//        output = TransactionLib.sort(transactions, (t1, t2) -> Double.compare(t2.getAmount(), t1.getAmount()));
+//        displayTransactions(output);
+
+
+        // Req-4 : filter transactions by amount < 1000.00 and time > 2023-10-01T10:00:30Z
+        Predicate<Transaction> p1 = transaction -> transaction.getAmount() < 1000.00;
+        Predicate<Transaction> p2 = transaction -> transaction.getTimestamp().compareTo("2023-10-01T10:00:30Z") > 0;
+        Predicate<Transaction> p3 = p1.or(p2);
+        output = TransactionLib.filter(transactions, p3);
         displayTransactions(output);
+
 
     }
 
