@@ -55,6 +55,7 @@ public class Exercise2 {
     // -> hard to test
 
     // solution: use functional style programming with Java Streams API
+    // Stream API -> data processing lib using functional style programming
 
     private static List<String> getLowCalorieDishNames_v1(List<Dish> menu) {
         // step-1: filter low calorie dishes ( calories < 400 )

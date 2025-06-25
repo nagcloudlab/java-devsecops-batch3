@@ -34,7 +34,12 @@ public class Dish {
     }
 
     public String toString() {
-        return name;
+        return "Dish{" +
+                "name='" + name + '\'' +
+                ", vegetarian=" + vegetarian +
+                ", calories=" + calories +
+                ", type=" + type +
+                '}';
     }
 
 }
