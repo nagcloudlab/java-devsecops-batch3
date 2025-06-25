@@ -3,6 +3,7 @@ package com.npci;
 import com.npci.model.Transaction;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 class FoodUtil {
@@ -28,7 +29,20 @@ public class Exercise {
         menu.add("paneer tikka");
         menu.add("samosa");
 
-        // remove all all 'veg' items from the menu
+        // remove all 'veg' items from the menu
+        // style : imperative
+        Iterator<String> it = menu.iterator();
+        while (it.hasNext()) {
+            String foodItem = it.next();
+            if (FoodUtil.isVeg(foodItem)) {
+                it.remove();
+            }
+        }
+        // style : functional
+        //menu.removeIf(foodItem -> FoodUtil.isVeg(foodItem));
+        menu.removeIf(FoodUtil::isVeg); // method reference , you can use methods functionally
+
+        System.out.println(menu);
 
     }
 }
