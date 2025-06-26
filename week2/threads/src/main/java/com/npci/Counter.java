@@ -13,7 +13,7 @@ public class Counter {
         /*
          * 
          * thread
-         * reads the value of count from heap to stack
+         * - reads the value of count from heap to stack
          * increment the value of count
          * write the value of count back to heap
          * 

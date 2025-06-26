@@ -25,7 +25,7 @@ class R2 {
 
 }
 
-public class DeadLock {
+public class DeadLockExample {
     public static void main(String[] args) {
 
         R1 r1 = new R1();
