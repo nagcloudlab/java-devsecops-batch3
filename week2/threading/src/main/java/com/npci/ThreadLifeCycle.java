@@ -1,6 +1,6 @@
 package com.npci;
 
-public class ThreadLifeCycleExample {
+public class ThreadLifeCycle {
 
     public static void main(String[] args) {
 
@@ -37,9 +37,10 @@ public class ThreadLifeCycleExample {
         Thread thread2 = new Thread(task, "Thread-2");
         System.out.println(thread2.getState());
 
-        // New state to Runnable state , 1MB memory allocated , to create method-frame , method frame hold local
+        // New state to Runnable state , 1MB stack memory allocated , to create method-frame , method frame hold local
         thread1.start();
         thread2.start();
+
 
     }
 

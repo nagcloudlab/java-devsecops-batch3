@@ -11,7 +11,7 @@ package com.npci;
 
  */
 
-public class SingleThreadedApplication {
+public class SingleThreadApplication {
     public static void main(String[] args) {
 
         System.out.println(Thread.currentThread().getName());

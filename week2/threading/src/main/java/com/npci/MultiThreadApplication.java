@@ -19,7 +19,7 @@ package com.npci;
 //    }
 //}
 
-public class MultiThreadedApplication {
+public class MultiThreadApplication {
     public static void main(String[] args) {
 
         TransferService transferService = new TransferService();
