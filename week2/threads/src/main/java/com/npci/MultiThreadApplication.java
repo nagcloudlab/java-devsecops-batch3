@@ -1,12 +1,11 @@
 package com.npci;
 
 /*
-
     How to create new threads in Java?
 
     2 ways to create a thread in Java:
 
-    1. On demand thread creation using Thread class ( learning purpose only)
+    1. By Thread class ( learning purpose only)
     2. By thread-pool  ( production applications use this approach)
 
  */
