@@ -1,5 +1,6 @@
 package com.npci;
 
+
 public class Wait_Notify_Example {
 
     static Object lock = new Object();

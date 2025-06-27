@@ -1,44 +1,46 @@
 package com.npci;
 
+
 /*
-    How to create new threads in Java?
 
-    2 ways to create a thread in Java:
+    How to create/manage a thread in Java:
 
-    1. By Thread class ( learning purpose only)
-    2. By thread-pool  ( production applications use this approach)
+    way-1: Using Thread class instantiation ( for learning purpose only )
+    way-2: Using thread-pool (recommended way )
 
  */
 
-//
 //class Task implements Runnable {
 //    public void run() {
+//        //...
 //        String threadName = Thread.currentThread().getName();
-//        System.out.println("Thread " + threadName + " is running");
+//        System.out.println("Thread is running: " + threadName);
 //    }
 //}
 
 public class MultiThreadApplication {
     public static void main(String[] args) {
 
+//        Runnable task = () -> {
+//            //...
+//            String threadName = Thread.currentThread().getName();
+//            System.out.println("Thread is running: " + threadName);
+//        };
+//        Thread thread = new Thread(task, "Thread-1");
+//        thread.start(); // allocate new stack and start the thread
+
         TransferService transferService = new TransferService();
 
-        //Task task = new Task();
-        Runnable task1 = () -> {
-            String threadName = Thread.currentThread().getName();
-            System.out.println("Thread " + threadName + " is running");
-            transferService.transfer("A", "B", 1000);
+        Runnable aToB = () -> {
+            transferService.transfer("A", "B", 100);
         };
-        Runnable task2 = () -> {
-            String threadName = Thread.currentThread().getName();
-            System.out.println("Thread " + threadName + " is running");
-            transferService.transfer("C", "D", 1000);
+        Runnable cToD = () -> {
+            transferService.transfer("C", "D", 100);
         };
 
-        Thread thread1 = new Thread(task1);
-        Thread thread2 = new Thread(task2);
+        Thread thread1 = new Thread(aToB, "Thread-1");
+        Thread thread2 = new Thread(cToD, "Thread-2");
 
-        // Start the threads
         thread1.start();
         thread2.start();
 

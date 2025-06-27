@@ -1,28 +1,23 @@
 package com.npci;
 
-
-
 /*
 
-    Problems with single-threaded approach:
-    -> If the transfer takes time, the next transfer request will have to wait.
-    -> not utilizing the full potential of the system.
-    -> application not responsive, end user experience is poor.
+    Limitations of Single Thread Application:
+
+    -> It can only handle one transfer at a time.
+    -> not utilizing the full potential of multi-core processors.
+    -> not responsive to user interactions.
 
  */
 
 public class SingleThreadApplication {
     public static void main(String[] args) {
-
         System.out.println(Thread.currentThread().getName());
-
+        // thread = step-by-step
         TransferService transferService = new TransferService();
-
-        // step-1 : task1 : handle transfer request
+        // step-1: handle transfer from A to B
         transferService.transfer("A", "B", 1000);
-
-        // step-2: task2: handle transfer request
-        transferService.transfer("C", "D", 1000);
-
+        // step-2: handle transfer from C to D
+        transferService.transfer("C", "D", 2000);
     }
 }

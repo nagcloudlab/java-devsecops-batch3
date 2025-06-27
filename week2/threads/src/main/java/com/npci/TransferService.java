@@ -1,14 +1,13 @@
 package com.npci;
 
 public class TransferService {
-    public void transfer(String from, String to, int amount) {
-        System.out.println("Transferring " + amount + " from " + from + " to " + to);
-        // Simulate some processing time
+    public void transfer(String from,String to,double amount) {
+        System.out.println(Thread.currentThread().getName() + " - Transferring " + amount + " from " + from + " to " + to);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1000); // Simulating a delay for the transfer
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        System.out.println("Transfer complete from " + from + " to " + to);
+        System.out.println(Thread.currentThread().getName() + " - Transfer completed from " + from + " to " + to);
     }
 }

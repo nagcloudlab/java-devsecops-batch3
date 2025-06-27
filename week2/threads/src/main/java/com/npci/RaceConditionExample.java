@@ -5,17 +5,18 @@ public class RaceConditionExample {
 
         Counter counter = new Counter();
 
-        Runnable incrementTask = () -> {
+        Runnable task = () -> {
             for (int i = 0; i < 1000; i++) {
                 counter.increment();
             }
         };
 
-        Thread thread1 = new Thread(incrementTask, "Thread 1");
-        Thread thread2 = new Thread(incrementTask, "Thread 2");
+        Thread thread1 = new Thread(task, "T1");
+        Thread thread2 = new Thread(task, "T2");
 
         thread1.start();
         thread2.start();
+
 
         try {
             thread1.join();
@@ -24,6 +25,7 @@ public class RaceConditionExample {
             e.printStackTrace();
         }
 
-        System.out.println("Final count: " + counter.getCount()); // 2000
+        System.out.println("Final count: " + counter.getCount());
+
     }
 }
