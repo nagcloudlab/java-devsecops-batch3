@@ -1,4 +1,30 @@
 package com.npci.repository;
 
-public class JdbcAccountRepository {
+import com.npci.model.Account;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
+public class JdbcAccountRepository implements AccountRepository {
+
+    private static Logger logger = LoggerFactory.getLogger("transfer-service");
+
+    public JdbcAccountRepository() {
+        logger.info("JdbcAccountRepository initialized");
+    }
+
+    @Override
+    public Optional<Account> findByAccountNumber(String accountNumber) {
+        logger.info("Finding account by account number: {}", accountNumber);
+        //...
+        return Optional.of(new Account(accountNumber, "John Doe", 1000.0));
+    }
+
+    @Override
+    public Account update(Account account) {
+        logger.info("Updating account: {}", account.getAccountNumber());
+        //...
+        return account;
+    }
 }

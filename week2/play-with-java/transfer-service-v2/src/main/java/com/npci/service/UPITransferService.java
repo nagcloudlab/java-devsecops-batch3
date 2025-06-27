@@ -1,16 +1,20 @@
 package com.npci.service;
 
+import com.npci.exception.AccountBalanceException;
 import com.npci.exception.AccountNotFoundException;
 import com.npci.model.Account;
 import com.npci.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class UPITransferService implements TransferService {
     private static Logger logger = LoggerFactory.getLogger("transfer-service");
     private AccountRepository accountRepository;
 
+    @Autowired
     public UPITransferService(AccountRepository accountRepository) {
         logger.info("UPITransferService initialized with AccountRepository: {}", accountRepository.getClass());
         this.accountRepository = accountRepository;
@@ -28,7 +32,7 @@ public class UPITransferService implements TransferService {
 
         if (fromAccount.getBalance() < amount) {
             logger.error("Insufficient balance in the source account: {}", fromAccountNumber);
-            throw new IllegalArgumentException("Insufficient balance in the source account");
+            throw new AccountBalanceException("Insufficient balance in the source account");
         }
 
         fromAccount.setBalance(fromAccount.getBalance() - amount);
