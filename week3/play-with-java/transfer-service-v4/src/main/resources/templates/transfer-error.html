@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+</head>
+<body class="container">
+
+    <div class="display-1">transfer-service</div>
+    <hr/>
+
+    <a href="transfer-form" class="btn btn-link">Transfer</a>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="alert alert-danger">
+                <strong>Error:</strong> <span th:text="${errorMessage}">An error occurred during the transfer.</span>
+                <br/>
+                Please try again or contact support if the issue persists.
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+</html>
