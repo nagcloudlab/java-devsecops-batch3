@@ -22,6 +22,7 @@ developer complexities
 
  */
 
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "com.npci")
