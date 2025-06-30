@@ -19,7 +19,7 @@ import java.io.ObjectInputFilter;
 
 developer complexities
 
-    -> creating & wiring components based on dependency inversion principle
+    -> creating & wiring components based on dependency inversion principle  -> spring F.W
 
  */
 
@@ -46,10 +46,10 @@ public class Application {
         try {
             TransferService transferService = applicationContext.getBean(TransferService.class);
             transferService
-                    .initiateTransfer("123456789012", "123456789013", 1000);
+                    .initiateTransfer("123456789012", "123456789013", 100);
             logger.info("-".repeat(25));
             transferService
-                    .initiateTransfer("123456789012", "123456789013", 1000);
+                    .initiateTransfer("123456789012", "123456789013", 100);
 
         } catch (AccountNotFoundException | AccountBalanceException e) {
             logger.error("Error occurred while processing transfer: {}", e.getMessage());
