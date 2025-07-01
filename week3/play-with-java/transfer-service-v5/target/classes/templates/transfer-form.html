@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer Funds - Secure App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">SecureApp</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/transfer-form">Transfer</a></li>
+                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Transfer Funds</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/transfer" method="post">
+                <div class="mb-3">
+                    <label for="fromAccount" class="form-label">From Account</label>
+                    <input type="text" class="form-control" id="fromAccount" name="fromAccount" required>
+                </div>
+                <div class="mb-3">
+                    <label for="toAccount" class="form-label">To Account</label>
+                    <input type="text" class="form-control" id="toAccount" name="toAccount" required>
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Transfer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

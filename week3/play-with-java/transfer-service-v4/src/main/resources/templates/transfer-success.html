@@ -17,7 +17,9 @@
     <div class="row">
         <div class="col-6">
             <div class="alert alert-success">
-                successfully transferred <strong>${amount}</strong> from <strong>${fromAccount}</strong> to <strong>${toAccount}</strong>.
+                status: <strong th:text="${transferResponse.status}"></strong>
+                <hr/>
+                message: <strong th:text="${transferResponse.message}"></strong>
             </div>
         </div>
     </div>
