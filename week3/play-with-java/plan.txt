@@ -1,0 +1,17 @@
+
+
+----------------------------------------
+project  : transfer-service
+----------------------------------------
+language : java
+framework: spring-boot 
+database : postgresql,cassandra
+messaging: kafka
+build    : maven
+testing  : junit + mockito + rest-assured
+ci/cd    : jenkins + nexus artifactory
+container: docker & kubernetes
+monitoring: JMX + Open tele + prometheus + grafana
+security : sonarqube + checkmarx + trivy + OWASP related tools
+
+----------------------------------------

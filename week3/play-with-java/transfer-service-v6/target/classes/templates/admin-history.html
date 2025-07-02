@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Transaction History - Admin</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    form { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Transaction History (Hourly View)</h2>
+
+<form method="get" th:action="@{/admin/history}">
+  <label >Enter Hour Bucket:</label>
+  <input type="text"  name="hourBucket" required>
+  <button type="submit">View</button>
+</form>
+
+<div th:if="${transactions != null}">
+  <table>
+    <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>Transaction ID</th>
+      <th>From Account</th>
+      <th>To Account</th>
+      <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tx : ${transactions}">
+      <td th:text="${tx.key.timestamp}">2025-07-01T12:01:23Z</td>
+      <td th:text="${tx.key.transactionId}">UUID</td>
+      <td th:text="${tx.fromAccount}">123</td>
+      <td th:text="${tx.toAccount}">456</td>
+      <td th:text="${tx.amount}">100.00</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

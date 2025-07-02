@@ -26,21 +26,20 @@ public class JdbcAccountRepository implements AccountRepository {
     @Override
     public Optional<Account> findByAccountNumber(String accountNumber) {
         logger.info("Finding account by account number: {}", accountNumber);
-        String query = "select * from accounts where account_number = ?";
-        Account account = jdbcTemplate.queryForObject(query, (rs, rowIndex) -> {
-            String accNumber = rs.getString("account_number");
-            String accHolderName = rs.getString("account_holder_name");
+        String sql = "select * from accounts where account_number = ?";
+        Account account = jdbcTemplate.queryForObject(sql, (rs, rowIndex) -> {
+            String accountHolderName = rs.getString("account_holder_name");
             double balance = rs.getDouble("balance");
-            return new Account(accNumber, accHolderName, balance);
+            return new Account(accountNumber, accountHolderName, balance);
         }, accountNumber);
-        return Optional.of(account);
+        return Optional.ofNullable(account);
     }
 
     @Override
-    public Account update(Account account) {
-        logger.info("Updating account: {}", account.getAccountNumber());
-        String updateQuery = "update accounts set balance = ? where account_number = ?";
-        jdbcTemplate.update(updateQuery, account.getBalance(), account.getAccountNumber());
-        return account;
+    public void update(Account account) {
+        logger.info("Updating account details for account number: {}", account.getAccountNumber());
+        // ... Implement JDBC logic to update account details
+        String sql = "update accounts set balance = ? where account_number = ?";
+        jdbcTemplate.update(sql, account.getBalance(), account.getAccountNumber());
     }
 }

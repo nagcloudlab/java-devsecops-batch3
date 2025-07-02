@@ -27,12 +27,8 @@ public class NpciAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         String password = request.getParameter("password");
         String rsaToken = request.getParameter("rsaToken");
 
-        System.out.println("-".repeat(50));
-        System.out.println("[FILTER] Username: " + username);
-        System.out.println("[FILTER] Password: " + password);
-        System.out.println("[FILTER] RSA Token: " + rsaToken);
-        System.out.println("-".repeat(50));
         NpciAuthenticationToken npciAuthenticationToken = new NpciAuthenticationToken(username, password, rsaToken);
+
         return this.getAuthenticationManager().authenticate(npciAuthenticationToken);
     }
 

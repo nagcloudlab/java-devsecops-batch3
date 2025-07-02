@@ -8,21 +8,18 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name="accounts")
+@Table(name = "accounts")
 public class Account implements Comparable<Account> {
-
     @Id
-    @Column(name="account_number")
+    @Column(name = "account_number", nullable = false, unique = true)
     private String accountNumber;
-    @Column(name="account_holder_name")
+    @Column(name = "account_holder_name", nullable = false)
     private String accountHolderName;
-    @Column(name="balance")
+    @Column(name = "balance", nullable = false)
     private double balance;
 
-    public Account() {
-        // Default constructor for JPA
-    }
 
+    public Account() {}
     public Account(String accountNumber, String accountHolderName, double balance) {
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
@@ -56,7 +53,8 @@ public class Account implements Comparable<Account> {
 
     @Override
     public int compareTo(Account o) {
-        return this.accountNumber.compareTo(o.accountNumber);
+        // Compare accounts by balance in descending order
+        return this.getAccountNumber().compareTo(o.getAccountNumber());
     }
 
     @Override
