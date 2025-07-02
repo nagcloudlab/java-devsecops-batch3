@@ -3,7 +3,6 @@ package com.npci.model;
 import java.util.Objects;
 
 public class Account implements Comparable<Account> {
-
     private String accountNumber;
     private String accountHolderName;
     private double balance;
@@ -41,7 +40,8 @@ public class Account implements Comparable<Account> {
 
     @Override
     public int compareTo(Account o) {
-        return this.accountNumber.compareTo(o.accountNumber);
+        // Compare accounts by balance in descending order
+        return this.getAccountNumber().compareTo(o.getAccountNumber());
     }
 
     @Override

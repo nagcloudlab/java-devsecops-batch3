@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class NpciAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
-    private UserRepository userRepository;
+    private NpciUserDetailsService npciUserDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -27,13 +28,9 @@ public class NpciAuthenticationProvider implements AuthenticationProvider {
         String rawPassword = token.getCredentials().toString();
         String rsaToken = token.getRsaToken();
 
-        System.out.println("[PROVIDER] Username: " + username);
-        System.out.println("[PROVIDER] Password: " + rawPassword);
-        System.out.println("[PROVIDER] RSA Token: " + rsaToken);
 
         // Fetch user entity
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UserDetails user = npciUserDetailsService.loadUserByUsername(username);
 
         // Check password with encoder
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
@@ -47,7 +44,7 @@ public class NpciAuthenticationProvider implements AuthenticationProvider {
 
         // Success: create authenticated token with authorities
         NpciAuthenticationToken authenticatedToken =
-                new NpciAuthenticationToken(username, null, user.getRoles());
+                new NpciAuthenticationToken(username, null, user.getAuthorities());
 
         return authenticatedToken;
     }

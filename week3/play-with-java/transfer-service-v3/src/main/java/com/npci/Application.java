@@ -1,7 +1,5 @@
 package com.npci;
 
-import com.npci.exception.AccountBalanceException;
-import com.npci.exception.AccountNotFoundException;
 import com.npci.service.TransferService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +11,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-
 /*
 
 developer complexities
+-------------------------
 
-    -> creating & wiring components based on dependency inversion principle  -> spring F.W
+-> creating & wiring components
 
  */
 
@@ -32,41 +30,31 @@ public class Application {
 
     public static void main(String[] args) {
 
-        //----------------------------------------------------------
-        // Init / boot
-        //----------------------------------------------------------
+        //------------------------------------------------------
+        // init / boot phase
+        //------------------------------------------------------
         logger.info("-".repeat(50));
 
         ConfigurableApplicationContext applicationContext =
                 SpringApplication.run(Application.class, args);
 
         logger.info("-".repeat(50));
-        //----------------------------------------------------------
-        // Run
-        //----------------------------------------------------------
+        //-------------------------------------------------------
+        // run phase
+        //-------------------------------------------------------
         logger.info("-".repeat(50));
-
         try {
             TransferService transferService = applicationContext.getBean(TransferService.class);
-            transferService
-                    .initiateTransfer("123456789012", "123456789013", 100);
-            logger.info("-".repeat(25));
-            transferService
-                    .initiateTransfer("123456789012", "123456789013", 100);
-
-        } catch (AccountNotFoundException | AccountBalanceException e) {
-            logger.error("Error occurred while processing transfer: {}", e.getMessage());
+            transferService.initiateTransfer("123456789012", "123456789013", 100);
         } catch (Exception e) {
-            logger.error("Unexpected error occurred: {}", e.getMessage(), e);
-        } finally {
-            logger.info("Transfer service operations completed.");
+            System.err.println("Transfer failed: " + e.getMessage());
         }
 
         logger.info("-".repeat(50));
-        //----------------------------------------------------------
-        // Shutdown
-        //----------------------------------------------------------
-        applicationContext.close();
+        //--------------------------------------------------------
+        // shutdown phase
+        //--------------------------------------------------------
 
     }
+
 }

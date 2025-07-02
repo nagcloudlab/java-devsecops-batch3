@@ -5,14 +5,13 @@ import com.npci.dto.TransferResponse;
 import com.npci.exception.AccountBalanceException;
 import com.npci.exception.AccountNotFoundException;
 import com.npci.service.TransferService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TransferController {
@@ -29,8 +28,8 @@ public class TransferController {
             value = "/transfer-form"
     )
     public String showTransferForm() {
-        // Logic to display the transfer form
-        return "transfer-form"; // This should return the name of the view template
+        // This method will return the view name for the transfer form
+        return "transfer-form"; // Assuming you have a view named 'transfer-form.html'
     }
 
     @RequestMapping(
@@ -38,30 +37,34 @@ public class TransferController {
             value = "/transfer"
     )
     public String handleTransfer(
-            @ModelAttribute TransferRequest request, // dto for transfer request
+//            @RequestParam(name = "fromAccount") String fromAccount,
+//            @RequestParam(name = "toAccount") String toAccount,
+//            @RequestParam(name = "amount") double amount
+            @ModelAttribute TransferRequest transferRequest,
             Model model
-            ) {
-
-        String fromAccountNumber = request.getFromAccountNumber();
-        String toAccountNumber = request.getToAccountNumber();
-        double amount = request.getAmount();
-
+    ) {
+        // This method will handle the transfer logic
+        // You can add your business logic here
+        TransferResponse transferResponse = new TransferResponse();
         try {
-            transferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
-            TransferResponse transferResponse = new TransferResponse();
+            transferService.initiateTransfer(
+                    transferRequest.getFromAccount(),
+                    transferRequest.getToAccount(),
+                    transferRequest.getAmount());
             transferResponse.setStatus("success");
-            transferResponse.setMessage("Transfer successful");
+            transferResponse.setMessage("transfer successful");
+            transferResponse.setTransactionId("12121212");
             model.addAttribute("transferResponse", transferResponse);
-            return "transfer-success"; // Redirect to success page
-        } catch (AccountNotFoundException | AccountBalanceException e) {
-            TransferResponse transferResponse = new TransferResponse();
-            transferResponse.setStatus("failure");
-            transferResponse.setMessage(e.getMessage());
+            return "transfer-success"; // Assuming you have a view named 'transfer-success.html'
+        } catch (AccountNotFoundException | AccountBalanceException ex) {
+            // Handle exceptions and return an error view
+            // You can log the exception or show an error message to the user
+            //ex.printStackTrace();
+            transferResponse.setStatus("error");
+            transferResponse.setMessage(ex.getMessage());
             model.addAttribute("transferResponse", transferResponse);
-            return "transfer-error"; // Redirect to failure page
+            return "transfer-error"; // Assuming you have a view named 'transfer-error.html'
         }
-
     }
-
 
 }

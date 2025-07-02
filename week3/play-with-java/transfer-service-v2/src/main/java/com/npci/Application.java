@@ -1,25 +1,21 @@
 package com.npci;
 
 import com.npci.config.TransferServiceConfiguration;
-import com.npci.exception.AccountBalanceException;
-import com.npci.exception.AccountNotFoundException;
 import com.npci.repository.AccountRepository;
 import com.npci.repository.JdbcAccountRepository;
 import com.npci.service.TransferService;
-import com.npci.service.UPITransferService;
+import com.npci.service.UpiTransferService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.ObjectInputFilter;
-
-
 /*
 
 developer complexities
+-------------------------
 
-    -> creating & wiring components based on dependency inversion principle  -> spring F.W
+-> creating & wiring components
 
  */
 
@@ -29,41 +25,33 @@ public class Application {
 
     public static void main(String[] args) {
 
-        //----------------------------------------------------------
-        // Init / boot
-        //----------------------------------------------------------
+        //------------------------------------------------------
+        // init / boot phase
+        //------------------------------------------------------
         logger.info("-".repeat(50));
 
         ConfigurableApplicationContext applicationContext =
                 new AnnotationConfigApplicationContext(TransferServiceConfiguration.class);
 
         logger.info("-".repeat(50));
-        //----------------------------------------------------------
-        // Run
-        //----------------------------------------------------------
+        //-------------------------------------------------------
+        // run phase
+        //-------------------------------------------------------
         logger.info("-".repeat(50));
-
         try {
             TransferService transferService = applicationContext.getBean(TransferService.class);
-            transferService
-                    .initiateTransfer("123456789012", "123456789013", 100);
+            transferService.initiateTransfer("123456789013", "123456789012", 1000);
             logger.info("-".repeat(25));
-            transferService
-                    .initiateTransfer("123456789012", "123456789013", 100);
-
-        } catch (AccountNotFoundException | AccountBalanceException e) {
-            logger.error("Error occurred while processing transfer: {}", e.getMessage());
+            transferService.initiateTransfer("123456789013", "123456789012", 1000);
         } catch (Exception e) {
-            logger.error("Unexpected error occurred: {}", e.getMessage(), e);
-        } finally {
-            logger.info("Transfer service operations completed.");
+            System.err.println("Transfer failed: " + e.getMessage());
         }
 
         logger.info("-".repeat(50));
-        //----------------------------------------------------------
-        // Shutdown
-        //----------------------------------------------------------
-        applicationContext.close();
+        //--------------------------------------------------------
+        // shutdown phase
+        //--------------------------------------------------------
 
     }
+
 }

@@ -60,8 +60,7 @@ public class NpciSecurityConfiguration {
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
-                .addFilterBefore(npciAuthenticationFilter(authenticationManager(http)),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(npciAuthenticationFilter(authenticationManager(http)), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
