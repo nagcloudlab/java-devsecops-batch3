@@ -1,0 +1,82 @@
+
+dev-sec-ops practices
+-------------------
+
+  -> build automation
+  -> continuous integration 
+  -> continuous delivery 
+  -> continuous deployment 
+  -> infrastructure as code 
+  -> monitoring and logging
+  -> configuration management
+  .....
+  +
+  -> security practices
+
+
+  how to implement dev-sec-ops practices?
+  ------------------------------------------
+
+  -> by using tools
+    how to choose tools?
+     -> by costing
+     -> by features
+     -> by community support
+     -> by integration with other tools
+     -> by ease of use
+     -> by scalability
+     -> by security features
+     -> by performance
+
+  -> by using scripts
+     -> dynamic language scripts
+        -> python
+        -> groovy
+        -> shell scripts..
+
+------------------------------------------
+
+https://digital.ai/learn/devsecops-periodic-table/
+
+    -> dev-sec-ops practices
+        -> security testing
+        -> security monitoring
+        -> security automation
+        -> security compliance
+        -> security governance
+        -> security incident response
+        -> security risk management
+        -> security awareness and training
+    
+    -> dev-sec-ops tools
+        -> static application security testing (SAST)
+        -> dynamic application security testing (DAST)
+        -> interactive application security testing (IAST)
+        -> software composition analysis (SCA)
+        -> container security
+        -> cloud security
+        -> infrastructure as code (IaC) security
+
+
+-------
+
+https://slides.com/d/RUKRGJg/live#/57
+
+
+---------------------------------------------------------
+How to automate Java Build
+-------------------------------------------------------
+
+
+  1. Maven  ( XML based )  -> popular
+  2. Gradle ( Groovy | Kotlin based)
+  3. SBT    ( Scala based )
+
+  ....
+
+
+
+Maven
+-----------
+
+https://www.slideshare.net/slideshow/an-introduction-to-maven/12787488?from_search=2
