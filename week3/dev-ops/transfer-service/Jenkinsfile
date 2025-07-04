@@ -4,8 +4,9 @@ pipeline{
     stages{
         stage("compile"){
          steps{
-            sh "cd week3/dev-ops/transfer-service"
-            sh "./mvnw compile"
+            dir("week3/dev-ops/transfer-service"){
+                sh "./mvnw compile"
+            }
          }  
         }
     }
