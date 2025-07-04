@@ -27,13 +27,11 @@ pipeline{
         }
 
         
-        stage('📦 Deploy to Nexus') {
+        stage('Deploy') {
             steps {
-                dir("week3/dev-ops/transfer-service"){
-                    withCredentials([usernamePassword(credentialsId: 'nexus-cred', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                        sh """
-                            ./mvnw deploy -DskipTests -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS
-                        """
+               withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
+                    dir('week3/dev-ops/transfer-service') {
+                        sh './mvnw deploy -DskipTests -s $SETTINGS_XML'
                     }
                 }
             }

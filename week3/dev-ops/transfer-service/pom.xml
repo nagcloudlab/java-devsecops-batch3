@@ -132,7 +132,7 @@
         <repository>
             <id>nexus</id>
             <name>Nexus</name>
-            <url>http://4.247.130.20:8081/repository/maven-snapshots/</url>
+            <url>http://localhost:8081/repository/maven-snapshots/</url>
         </repository>
     </distributionManagement>
 
