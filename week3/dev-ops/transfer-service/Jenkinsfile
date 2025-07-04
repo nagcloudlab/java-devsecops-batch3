@@ -2,9 +2,10 @@
 pipeline{
     agent any
     stages{
-        stage("A"){
+        stage("compile"){
          steps{
-            echo "Hello World"
+            sh "cd week3/dev-ops/transfer-service"
+            sh "./mvnw compile"
          }  
         }
     }
