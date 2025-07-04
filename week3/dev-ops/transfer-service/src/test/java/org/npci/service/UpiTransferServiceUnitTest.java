@@ -41,7 +41,7 @@ public class UpiTransferServiceUnitTest {
         AccountNotFoundException e = assertThrows(AccountNotFoundException.class, () -> {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("From account not found - " + fromAccountNumber, e.getMessage());
+        assertEquals("Sender account not found", e.getMessage());
 
     }
 
@@ -62,7 +62,7 @@ public class UpiTransferServiceUnitTest {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
 
-        assertEquals("Insufficient balance in from account - " + fromAccountNumber, e.getMessage());
+        assertEquals("Insufficient balance in sender account", e.getMessage());
     }
 
     // Successful transfer test

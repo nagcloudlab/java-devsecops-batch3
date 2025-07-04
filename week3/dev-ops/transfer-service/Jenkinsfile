@@ -1,6 +1,14 @@
 
 pipeline{
     agent any
+
+      environment {
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_PROJECT_KEY = 'transfer-service'
+        // Set here if you want to override Maven default repo URL
+        // MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
+      }
+
     stages{
        
         stage("Compile"){
@@ -18,6 +26,32 @@ pipeline{
             }
          }  
         }
+
+        stage('🔐SonarQube Static Code Scan') {
+              environment {
+                SONAR_TOKEN = credentials('sonar-token')  // Store in Jenkins credentials
+              }
+              steps {
+                echo '📡 Sending code to SonarQube for static analysis...'
+                withSonarQubeEnv('SonarQube') {
+                  sh """
+                    ./mvnw verify sonar:sonar \
+                      -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                  """
+                }
+              }
+        }
+
+         stage('🚦Sonar Quality Gate Check') {
+              steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                  waitForQualityGate abortPipeline: true
+                }
+              }
+         }
+
         stage("Package"){
          steps{
             dir("week3/dev-ops/transfer-service"){

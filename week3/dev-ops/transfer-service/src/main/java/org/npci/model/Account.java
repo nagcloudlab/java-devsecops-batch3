@@ -1,24 +1,28 @@
 package org.npci.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Data
 @Entity
 @Table(name = "accounts")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
+
     @Id
     @Column(name = "account_number", nullable = false, unique = true)
+    @Pattern(regexp = "\\d{10,18}", message = "Invalid account number")
     private String accountNumber;
+
     @Column(name = "account_holder_name", nullable = false)
+    @NotBlank(message = "Account holder name is required")
     private String accountHolderName;
+
     @Column(name = "balance", nullable = false)
+    @PositiveOrZero(message = "Balance cannot be negative")
     private double balance;
 }

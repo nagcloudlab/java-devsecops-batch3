@@ -22,15 +22,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(
         classes = {Application.class}
-        // H2 database configuration
-//        properties = {
-//                "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1",
-//                "spring.datasource.driverClassName=org.h2.Driver",
-//                "spring.datasource.username=sa",
-//                "spring.datasource.password=",
-//                "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-//                "spring.jpa.hibernate.ddl-auto=create-drop"
-//        }
 )
 public class UpiTransferServiceIntegrationTest {
 
@@ -92,7 +83,7 @@ public class UpiTransferServiceIntegrationTest {
         AccountNotFoundException e = assertThrows(AccountNotFoundException.class, () -> {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("From account not found - " + fromAccountNumber, e.getMessage());
+        assertEquals("Sender account not found", e.getMessage());
     }
 
     // Insufficient balance test
@@ -107,7 +98,7 @@ public class UpiTransferServiceIntegrationTest {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
 
-        assertEquals("Insufficient balance in from account - " + fromAccountNumber, e.getMessage());
+        assertEquals("Insufficient balance in sender account", e.getMessage());
     }
 
     // Successful transfer test
