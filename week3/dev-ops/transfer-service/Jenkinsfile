@@ -2,6 +2,7 @@
 pipeline{
     agent any
     stages{
+       
         stage("Compile"){
          steps{
             dir("week3/dev-ops/transfer-service"){
@@ -9,6 +10,7 @@ pipeline{
             }
          }  
         }
+
         stage("Test"){
          steps{
             dir("week3/dev-ops/transfer-service"){
@@ -30,7 +32,7 @@ pipeline{
                 dir("week3/dev-ops/transfer-service"){
                     withCredentials([usernamePassword(credentialsId: 'nexus-cred', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh """
-                            mvn deploy -DskipTests -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS
+                            ./mvnw deploy -DskipTests -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS
                         """
                     }
                 }
