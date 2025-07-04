@@ -1,65 +1,134 @@
 package org.npci.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.*;
+import org.npci.Application;
+import org.npci.exception.AccountBalanceException;
+import org.npci.exception.AccountNotFoundException;
 import org.npci.model.Account;
 import org.npci.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class UpiTransferServiceTest {
+@SpringBootTest(
+        classes = {Application.class}
+        // H2 database configuration
+//        properties = {
+//                "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1",
+//                "spring.datasource.driverClassName=org.h2.Driver",
+//                "spring.datasource.username=sa",
+//                "spring.datasource.password=",
+//                "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+//                "spring.jpa.hibernate.ddl-auto=create-drop"
+//        }
+)
+public class UpiTransferServiceIntegrationTest {
 
-    AccountRepository accountRepositoryMock;
+    @Autowired
     UpiTransferService upiTransferService;
-    Account fromAccount;
-    Account toAccount;
+    @Autowired
+    AccountRepository accountRepository;
+
+    public static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:15.3")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
+
+
+    @BeforeAll
+    public static void setUpClass() {
+        postgresContainer.start();
+    }
+
+    @AfterAll
+    public static void tearDownClass() {
+        postgresContainer.stop();
+    }
+
+    @DynamicPropertySource
+    static void overrideProps(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgresContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgresContainer::getUsername);
+        registry.add("spring.datasource.password", postgresContainer::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
+    }
+
 
     @BeforeEach
+    @Transactional
     public void setUp() {
-
-        accountRepositoryMock = mock(AccountRepository.class);
-        upiTransferService = new UpiTransferService(accountRepositoryMock);
-
-        // Mock the behavior of the accountRepository to return dummy accounts
-        fromAccount = new Account("1234567890", "John Doe", 500.0);
-        toAccount = new Account("0987654321", "Jane Doe", 300.0);
-        when(accountRepositoryMock.findById("1234567890")).thenReturn(Optional.of(fromAccount));
-        when(accountRepositoryMock.findById("0987654321")).thenReturn(Optional.of(toAccount));
+        // Initialize the database with test data
+        Account fromAccount = new Account("fromAccount", "John", 200.0);
+        Account toAccount = new Account("toAccount", "Jane", 300.0);
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
     }
 
-
-    @Test
-    public void testInitiateTransfer() {
-        upiTransferService
-                .initiateTransfer("1234567890", "0987654321", 100.0);
-        assertEquals(400.0, fromAccount.getBalance(), 0.01);
-        assertEquals(400.0, toAccount.getBalance(), 0.01);
-
-        verify(accountRepositoryMock, times(1)).save(fromAccount);
-        verify(accountRepositoryMock, times(1)).save(toAccount);
+    // Cleanup after tests
+    @AfterEach
+    @Transactional
+    public void tearDown() {
+        // Clear the database after each test
+        accountRepository.deleteAll();
     }
 
-
+    // Invalid account number test
     @Test
-    public void testInitiateTransferInsufficientBalance() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            upiTransferService.initiateTransfer("1234567890", "0987654321", 600.0);
+    @Transactional
+    public void testInitiateTransfer_InvalidAccountNumber() {
+        String fromAccountNumber = "invalidFromAccount";
+        String toAccountNumber = "invalidToAccount";
+        double amount = 100.0;
+        AccountNotFoundException e = assertThrows(AccountNotFoundException.class, () -> {
+            upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("Insufficient balance in from account - 1234567890", exception.getMessage());
+        assertEquals("From account not found - " + fromAccountNumber, e.getMessage());
     }
 
+    // Insufficient balance test
     @Test
-    public void testInitiateTransferAccountNotFound() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            upiTransferService.initiateTransfer("12121212", "0987654321", 100.0);
+    @Transactional
+    public void testInitiateTransfer_InsufficientBalance() {
+        String fromAccountNumber = "fromAccount";
+        String toAccountNumber = "toAccount";
+        double amount = 1000.0;
+
+        AccountBalanceException e = assertThrows(AccountBalanceException.class, () -> {
+            upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("From account not found - 12121212", exception.getMessage());
+
+        assertEquals("Insufficient balance in from account - " + fromAccountNumber, e.getMessage());
     }
+
+    // Successful transfer test
+    @Test
+    @Transactional
+    public void testInitiateTransfer_Successful() {
+        String fromAccountNumber = "fromAccount";
+        String toAccountNumber = "toAccount";
+        double amount = 100.0;
+
+        upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
+
+        Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber)
+                .orElseThrow(() -> new RuntimeException("From account not found - " + fromAccountNumber));
+
+        Account toAccount = accountRepository.findByAccountNumber(toAccountNumber)
+                .orElseThrow(() -> new RuntimeException("To account not found - " + toAccountNumber));
+
+        assertEquals(100.0, fromAccount.getBalance());
+        assertEquals(400.0, toAccount.getBalance());
+    }
+
 
 }
