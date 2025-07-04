@@ -18,6 +18,7 @@ public class UpiTransferApiTest extends BaseTransferApiTest {
 
     // Junit + Hamcrest + Rest Assured
     @Test
+    @Disabled("This test is disabled as it requires a running UPI transfer service")
     public void transferMoneyTest() {
 
         String requestBody = """

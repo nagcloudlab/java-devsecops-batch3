@@ -2,10 +2,24 @@
 pipeline{
     agent any
     stages{
-        stage("compile"){
+        stage("Compile"){
          steps{
             dir("week3/dev-ops/transfer-service"){
                 sh "./mvnw compile"
+            }
+         }  
+        }
+        stage("Test"){
+         steps{
+            dir("week3/dev-ops/transfer-service"){
+                sh "./mvnw test"
+            }
+         }  
+        }
+        stage("Package"){
+         steps{
+            dir("week3/dev-ops/transfer-service"){
+                sh "./mvnw package -DskipTests"
             }
          }  
         }
