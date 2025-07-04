@@ -31,6 +31,7 @@ pipeline{
               environment {
                 SONAR_TOKEN = credentials('sonar-token')  // Store in Jenkins credentials
               }
+              dir("week3/dev-ops/transfer-service"){
               steps {
                 echo '📡 Sending code to SonarQube for static analysis...'
                 withSonarQubeEnv('SonarQube') {
@@ -42,6 +43,7 @@ pipeline{
                   """
                 }
               }
+            }
         }
 
          stage('🚦Sonar Quality Gate Check') {
