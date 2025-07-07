@@ -1,89 +1,82 @@
-
-pipeline{
+pipeline {
     agent any
 
-      environment {
+    environment {
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_PROJECT_KEY = 'transfer-service'
-        // Set here if you want to override Maven default repo URL
-        // MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
-      }
+    }
 
-    stages{
-       
-        stage("Compile"){
-         steps{
-            dir("week3/dev-ops/transfer-service"){
-                sh "./mvnw compile"
+    stages {
+        stage("Compile") {
+            steps {
+                dir("week3/dev-ops/transfer-service") {
+                    sh "./mvnw compile"
+                }
             }
-         }  
         }
 
-        stage("Test"){
-         steps{
-            dir("week3/dev-ops/transfer-service"){
-                sh "./mvnw test"
+        stage("Test") {
+            steps {
+                dir("week3/dev-ops/transfer-service") {
+                    sh "./mvnw test"
+                }
             }
-         }  
         }
 
         stage('🔐SonarQube Static Code Scan') {
-              environment {
-                SONAR_TOKEN = credentials('sonar-token')  // Store in Jenkins credentials
-              }
-
-              steps {
-              dir("week3/dev-ops/transfer-service"){
-                echo '📡 Sending code to SonarQube for static analysis...'
-                withSonarQubeEnv('SonarQube') {
-                  sh """
-                    ./mvnw verify sonar:sonar \
-                      -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                      -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.login=$SONAR_TOKEN
-                  """
+            environment {
+                SONAR_TOKEN = credentials('sonar-token') // from Jenkins credentials
+            }
+            steps {
+                dir("week3/dev-ops/transfer-service") {
+                    echo '📡 Sending code to SonarQube for static analysis...'
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                          ./mvnw verify sonar:sonar \
+                            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                            -Dsonar.host.url=$SONAR_HOST_URL \
+                            -Dsonar.login=$SONAR_TOKEN
+                        """
+                    }
                 }
-              }
             }
         }
 
-         stage('🚦Sonar Quality Gate Check') {
-              steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                  waitForQualityGate abortPipeline: true
+        stage('🚦Sonar Quality Gate Check') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
-              }
-         }
-
-        stage("Package"){
-         steps{
-            dir("week3/dev-ops/transfer-service"){
-                sh "./mvnw package -DskipTests"
             }
-         }  
         }
 
-        
+        stage("Package") {
+            steps {
+                dir("week3/dev-ops/transfer-service") {
+                    sh "./mvnw package -DskipTests"
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
-               withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
+                withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
                     dir('week3/dev-ops/transfer-service') {
                         sh './mvnw deploy -DskipTests -s $SETTINGS_XML'
                     }
                 }
             }
         }
-
-
     }
-    post{
-        always{
+
+    post {
+        always {
             echo "========always========"
         }
-        success{
+        success {
             echo "========pipeline executed successfully ========"
         }
-        failure{
+        failure {
             echo "========pipeline execution failed========"
         }
     }
