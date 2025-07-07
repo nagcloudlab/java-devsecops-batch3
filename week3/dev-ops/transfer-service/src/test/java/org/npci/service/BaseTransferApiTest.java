@@ -15,7 +15,7 @@ public class BaseTransferApiTest {
 
 
     @BeforeAll
-    public static void setupSpecs() {
+     static void setupSpecs() {
         System.out.println("Setting up specs...");
         transferRequestSpec = new RequestSpecBuilder()
                 .setBasePath("/api/v1/transfer")

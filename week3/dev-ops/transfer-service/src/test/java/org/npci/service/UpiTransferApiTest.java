@@ -13,18 +13,18 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
 
 
-public class UpiTransferApiTest extends BaseTransferApiTest {
+class UpiTransferApiTest extends BaseTransferApiTest {
 
 
     // Junit + Hamcrest + Rest Assured
     @Test
-    @Disabled("This test is disabled as it requires a running UPI transfer service")
-    public void transferMoneyTest() {
+    @Disabled
+     void transferMoneyTest() {
 
         String requestBody = """
                 {
                   "fromAccountNumber": "123456789013",
-                  "toAccountNumber": "123456789013",
+                  "toAccountNumber": "123456789012",
                   "amount": 100.0
                 }
                 """;
@@ -37,8 +37,8 @@ public class UpiTransferApiTest extends BaseTransferApiTest {
                 .spec(transferResponseSpec)
                 .body("status", equalTo("SUCCESS"))
                 .body("amount", equalTo(100.0f)) // for float/double use f
-                .body("fromAccountNumber", startsWith("123456789013"))
-                .body("toAccountNumber", startsWith("123456789013"))
+                .body("fromAccountNumber", startsWith("1234567890"))
+                .body("toAccountNumber", startsWith("1234567890"))
                 .body("transactionId", isValidTransferId);
 
     }

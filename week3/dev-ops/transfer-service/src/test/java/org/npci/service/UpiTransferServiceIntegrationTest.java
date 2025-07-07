@@ -23,26 +23,26 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(
         classes = {Application.class}
 )
-public class UpiTransferServiceIntegrationTest {
+class UpiTransferServiceIntegrationTest {
 
     @Autowired
     UpiTransferService upiTransferService;
     @Autowired
     AccountRepository accountRepository;
 
-    public static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:15.3")
+     static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:15.3")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
 
 
     @BeforeAll
-    public static void setUpClass() {
+     static void setUpClass() {
         postgresContainer.start();
     }
 
     @AfterAll
-    public static void tearDownClass() {
+     static void tearDownClass() {
         postgresContainer.stop();
     }
 
@@ -57,7 +57,7 @@ public class UpiTransferServiceIntegrationTest {
 
     @BeforeEach
     @Transactional
-    public void setUp() {
+     void setUp() {
         // Initialize the database with test data
         Account fromAccount = new Account("fromAccount", "John", 200.0);
         Account toAccount = new Account("toAccount", "Jane", 300.0);
@@ -68,7 +68,7 @@ public class UpiTransferServiceIntegrationTest {
     // Cleanup after tests
     @AfterEach
     @Transactional
-    public void tearDown() {
+     void tearDown() {
         // Clear the database after each test
         accountRepository.deleteAll();
     }
@@ -76,20 +76,20 @@ public class UpiTransferServiceIntegrationTest {
     // Invalid account number test
     @Test
     @Transactional
-    public void testInitiateTransfer_InvalidAccountNumber() {
+     void testInitiateTransfer_InvalidAccountNumber() {
         String fromAccountNumber = "invalidFromAccount";
         String toAccountNumber = "invalidToAccount";
         double amount = 100.0;
         AccountNotFoundException e = assertThrows(AccountNotFoundException.class, () -> {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("Sender account not found", e.getMessage());
+        assertEquals("From account not found - " + fromAccountNumber, e.getMessage());
     }
 
     // Insufficient balance test
     @Test
     @Transactional
-    public void testInitiateTransfer_InsufficientBalance() {
+     void testInitiateTransfer_InsufficientBalance() {
         String fromAccountNumber = "fromAccount";
         String toAccountNumber = "toAccount";
         double amount = 1000.0;
@@ -98,13 +98,13 @@ public class UpiTransferServiceIntegrationTest {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
 
-        assertEquals("Insufficient balance in sender account", e.getMessage());
+        assertEquals("Insufficient balance in from account - " + fromAccountNumber, e.getMessage());
     }
 
     // Successful transfer test
     @Test
     @Transactional
-    public void testInitiateTransfer_Successful() {
+     void testInitiateTransfer_Successful() {
         String fromAccountNumber = "fromAccount";
         String toAccountNumber = "toAccount";
         double amount = 100.0;

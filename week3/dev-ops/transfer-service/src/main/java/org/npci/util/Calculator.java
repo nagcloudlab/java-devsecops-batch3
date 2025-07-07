@@ -1,6 +1,5 @@
 package org.npci.util;
 
-
 // Unit
 public class Calculator {
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UpiTransferServiceUnitTest {
+class UpiTransferServiceUnitTest {
 
 
     UpiTransferService upiTransferService;
@@ -21,14 +21,14 @@ public class UpiTransferServiceUnitTest {
     AccountRepository accountRepositoryMock;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         accountRepositoryMock = mock(AccountRepository.class);
         upiTransferService = new UpiTransferService(accountRepositoryMock);
     }
 
     // Invalid account number test
     @Test
-    public void testInitiateTransfer_InvalidAccountNumber() {
+     void testInitiateTransfer_InvalidAccountNumber() {
         String fromAccountNumber = "invalidFromAccount";
         String toAccountNumber = "0987654321";
         double amount = 100.0;
@@ -41,13 +41,13 @@ public class UpiTransferServiceUnitTest {
         AccountNotFoundException e = assertThrows(AccountNotFoundException.class, () -> {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
-        assertEquals("Sender account not found", e.getMessage());
+        assertEquals("From account not found - " + fromAccountNumber, e.getMessage());
 
     }
 
     // Insufficient balance test
     @Test
-    public void testInitiateTransfer_InsufficientBalance() {
+     void testInitiateTransfer_InsufficientBalance() {
         String fromAccountNumber = "fromAccount";
         String toAccountNumber = "toAccount";
         double amount = 100.0;
@@ -62,12 +62,12 @@ public class UpiTransferServiceUnitTest {
             upiTransferService.initiateTransfer(fromAccountNumber, toAccountNumber, amount);
         });
 
-        assertEquals("Insufficient balance in sender account", e.getMessage());
+        assertEquals("Insufficient balance in from account - " + fromAccountNumber, e.getMessage());
     }
 
     // Successful transfer test
     @Test
-    public void testInitiateTransfer_SuccessfulTransfer() {
+     void testInitiateTransfer_SuccessfulTransfer() {
         String fromAccountNumber = "1234567890";
         String toAccountNumber = "0987654321";
         double amount = 100.0;
