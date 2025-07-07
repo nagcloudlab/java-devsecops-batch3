@@ -1,13 +1,15 @@
 pipeline {
+    
     agent any
 
     environment {
-        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_HOST_URL = "http://localhost:9000"
         SONAR_PROJECT_KEY = 'transfer-service'
     }
 
     stages {
-        stage("Compile") {
+       
+        stage("📦 Compile") {
             steps {
                 dir("week3/dev-ops/transfer-service") {
                     sh "./mvnw compile"
@@ -15,15 +17,20 @@ pipeline {
             }
         }
 
-        stage("Test") {
+        stage("🧪 Test") {
             steps {
                 dir("week3/dev-ops/transfer-service") {
                     sh "./mvnw test"
                 }
             }
+            post {
+                always {
+                    junit "week3/dev-ops/transfer-service/target/surefire-reports/*.xml"
+                }
+            }
         }
 
-        stage('🔐SonarQube Static Code Scan') {
+        stage("🔐 SonarQube Static Code Scan") {
             environment {
                 SONAR_TOKEN = credentials('sonar-token') // from Jenkins credentials
             }
@@ -32,17 +39,17 @@ pipeline {
                     echo '📡 Sending code to SonarQube for static analysis...'
                     withSonarQubeEnv('SonarQube') {
                         sh """
-                          ./mvnw verify sonar:sonar \
-                            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                            -Dsonar.host.url=$SONAR_HOST_URL \
-                            -Dsonar.login=$SONAR_TOKEN
+                            ./mvnw verify sonar:sonar \
+                              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                              -Dsonar.host.url=$SONAR_HOST_URL \
+                              -Dsonar.login=$SONAR_TOKEN
                         """
                     }
                 }
             }
         }
 
-        stage('🚦Sonar Quality Gate Check') {
+        stage("🚦 Sonar Quality Gate Check") {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -50,7 +57,7 @@ pipeline {
             }
         }
 
-        stage("Package") {
+        stage("📦 Package") {
             steps {
                 dir("week3/dev-ops/transfer-service") {
                     sh "./mvnw package -DskipTests"
@@ -58,8 +65,62 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage("🔍 OWASP Dependency Scan") {
             steps {
+                dir("week3/dev-ops/transfer-service") {
+                    sh './mvnw org.owasp:dependency-check-maven:check'
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'week3/dev-ops/transfer-service/target/dependency-check-report.html', allowEmptyArchive: true
+                    publishHTML(target: [
+                        reportDir: 'week3/dev-ops/transfer-service/target',
+                        reportFiles: 'dependency-check-report.html',
+                        reportName: 'OWASP Dependency Report'
+                    ])
+                }
+            }
+        }
+
+        stage("🕵️ Bytecode Scan (Find Security Bugs)") {
+            steps {
+                dir("week3/dev-ops/transfer-service") {
+                    sh './mvnw spotbugs:spotbugs'
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'week3/dev-ops/transfer-service/target/spotbugs.html', allowEmptyArchive: true
+                    publishHTML(target: [
+                        reportDir: 'week3/dev-ops/transfer-service/target',
+                        reportFiles: 'spotbugs.html',
+                        reportName: 'Find Security Bugs Report'
+                    ])
+                }
+            }
+        }
+
+        // stage("🔐 Checkmarx SAST Scan") {
+        //     steps {
+        //         script {
+        //         step([$class: 'CxScanBuilder',
+        //             credentialsId: 'checkmarx-creds',
+        //             serverUrl: 'https://your-checkmarx-server',
+        //             projectName: 'transfer-service',
+        //             sastEnabled: true,
+        //             vulnerabilityThresholdEnabled: true,
+        //             vulnerabilityThresholdResult: 'FAILURE',
+        //             waitForResultsEnabled: true
+        //         ])
+        //         }
+        //     }
+        // }
+
+
+        stage("🚀 Deploy") {
+            steps {
+                input "Ready to deploy?"
                 withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
                     dir('week3/dev-ops/transfer-service') {
                         sh './mvnw deploy -DskipTests -s $SETTINGS_XML'
@@ -74,10 +135,10 @@ pipeline {
             echo "========always========"
         }
         success {
-            echo "========pipeline executed successfully ========"
+            echo "✅ Pipeline executed successfully"
         }
         failure {
-            echo "========pipeline execution failed========"
+            echo "❌ Pipeline execution failed"
         }
     }
 }

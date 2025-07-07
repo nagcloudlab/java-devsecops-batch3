@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 @EntityScan("org.npci.model")
 public class Application {
 
+    String password = "password";
+
     public static void main(String[] args) {
         org.springframework.boot.SpringApplication.run(Application.class, args);
     }
