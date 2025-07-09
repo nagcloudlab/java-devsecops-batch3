@@ -40,11 +40,13 @@
         </dependency>
 
         <!-- Database -->
-        <dependency>
+         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        
 
         <!-- Configuration Metadata -->
         <dependency>
@@ -84,6 +86,11 @@
             <artifactId>rest-assured</artifactId>
             <version>5.5.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

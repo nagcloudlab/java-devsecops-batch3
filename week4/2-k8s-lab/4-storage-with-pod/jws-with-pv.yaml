@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jws-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""  
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.0.0.4
+    path: "/npci/nfs/jws/log"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jws-pv-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ""
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jws
+  labels:
+    app: jws
+spec:
+  selector:
+    matchLabels:
+      app: jws
+  replicas: 3    
+  template:
+    metadata:
+      name: java-web-service-pod
+      labels:
+        app: jws
+    spec:
+      containers:
+        - name: java-web-service-container
+          image: docker.io/nagabhushanamn/java-web-service:batch9
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: volume1
+              mountPath: /app/log
+      volumes:
+        - name: volume1
+          persistentVolumeClaim:
+            claimName: jws-pv-claim
+      
+        
+
+
+

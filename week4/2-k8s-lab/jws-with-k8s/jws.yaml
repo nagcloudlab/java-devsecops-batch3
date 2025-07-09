@@ -1,0 +1,11 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jws-pod
+  labels:
+    app: jws
+spec:
+  containers:
+  - name: jws-container
+    image: docker.io/nagabhushanamn/java-web-service:v1

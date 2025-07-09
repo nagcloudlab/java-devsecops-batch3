@@ -1,0 +1,191 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.8.6' // Make sure this matches Jenkins global tool config
+    }
+
+    environment {
+        SONAR_HOST_URL = "http://localhost:9000"
+        SONAR_PROJECT_KEY = 'transfer-service'
+        SONAR_TOKEN = credentials('sonar-token')
+    }
+
+    options {
+        timestamps()
+    }
+
+    stages {
+        stage("📦 Compile") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        sh 'mvn compile'
+                    }
+                }
+            }
+        }
+
+        stage("🧪 Test") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        sh 'mvn test'
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        def reportPath = "week3/dev-ops/transfer-service/target/surefire-reports"
+                        if (fileExists(reportPath)) {
+                            junit "${reportPath}/*.xml"
+                        } else {
+                            echo "❗ No test reports found to archive."
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🔐 SonarQube Static Code Scan") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        echo '📡 Sending code to SonarQube for static analysis...'
+                        withSonarQubeEnv('SonarQube') {
+                            sh """
+                                mvn verify sonar:sonar \
+                                    -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                                    -Dsonar.host.url=$SONAR_HOST_URL \
+                                    -Dsonar.login=$SONAR_TOKEN
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🚦 Sonar Quality Gate Check") {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("📦 Package") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        sh 'mvn package -DskipTests'
+                    }
+                }
+            }
+        }
+
+        stage("🔍 Static Scans in Parallel") {
+            parallel {
+                stage("🔐 OWASP Dependency Scan") {
+                    steps {
+                        script {
+                            def serviceDir = "week3/dev-ops/transfer-service"
+                            dir(serviceDir) {
+                                sh 'mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7'
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'week3/dev-ops/transfer-service/target/dependency-check-report.html', allowEmptyArchive: true
+                            publishHTML(target: [
+                                reportDir: 'week3/dev-ops/transfer-service/target',
+                                reportFiles: 'dependency-check-report.html',
+                                reportName: 'OWASP Dependency Report'
+                            ])
+                        }
+                    }
+                }
+
+                stage("🕵️ Bytecode Scan (Find Security Bugs)") {
+                    steps {
+                        script {
+                            def serviceDir = "week3/dev-ops/transfer-service"
+                            dir(serviceDir) {
+                                sh 'mvn spotbugs:spotbugs spotbugs:check'
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            script {
+                                def xml = 'week3/dev-ops/transfer-service/target/spotbugsXml.xml'
+                                def html = 'week3/dev-ops/transfer-service/target/spotbugs.html'
+                                if (fileExists(xml)) {
+                                    sh "xsltproc spotbugs.xsl ${xml} > ${html}"
+                                    archiveArtifacts artifacts: html, allowEmptyArchive: true
+                                    publishHTML(target: [
+                                        reportDir: 'week3/dev-ops/transfer-service/target',
+                                        reportFiles: 'spotbugs.html',
+                                        reportName: 'Find Security Bugs Report'
+                                    ])
+                                } else {
+                                    echo "❗ SpotBugs XML report not found."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Optional: Enable when Checkmarx is configured
+        /*
+        stage("🔐 Checkmarx SAST Scan") {
+            steps {
+                script {
+                    step([$class: 'CxScanBuilder',
+                        credentialsId: 'checkmarx-creds',
+                        serverUrl: 'https://your-checkmarx-server',
+                        projectName: 'transfer-service',
+                        sastEnabled: true,
+                        vulnerabilityThresholdEnabled: true,
+                        vulnerabilityThresholdResult: 'FAILURE',
+                        waitForResultsEnabled: true
+                    ])
+                }
+            }
+        }
+        */
+
+        stage("🚀 Deploy") {
+            steps {
+                input message: 'Do you want to deploy the transfer-service?', ok: 'Deploy'
+                withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
+                    script {
+                        def serviceDir = "week3/dev-ops/transfer-service"
+                        dir(serviceDir) {
+                            sh 'mvn deploy -DskipTests -s $SETTINGS_XML'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "======== Pipeline Finished (Always) ========"
+        }
+        success {
+            echo "✅ Pipeline executed successfully"
+        }
+        failure {
+            echo "❌ Pipeline execution failed"
+        }
+    }
+}

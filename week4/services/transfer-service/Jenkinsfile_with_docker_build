@@ -1,0 +1,277 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.8.6' // Use Jenkins' global Maven installation
+    }
+
+    environment {
+        SONAR_HOST_URL = "http://localhost:9000"
+        SONAR_PROJECT_KEY = 'transfer-service'
+        SONAR_TOKEN = credentials('sonar-token')
+        MAVEN_OPTS = "-Dmaven.repo.local=.m2/repository" // Maven caching
+        IMAGE_NAME = 'yourdockerhubuser/transfer-service' // Change this
+    }
+
+    options {
+        timestamps()                     // Adds timestamps to console output
+        skipStagesAfterUnstable()       // Skips remaining stages if a stage is marked unstable
+    }
+
+    stages {
+
+        stage("📦 Compile") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        retry(2) {
+                            sh 'mvn compile'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🧪 Unit Test + Code Coverage") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        retry(2) {
+                            sh 'mvn test jacoco:report'
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        def reportPath = "week3/dev-ops/transfer-service/target/surefire-reports"
+                        if (fileExists(reportPath)) {
+                            junit "${reportPath}/*.xml"
+                        } else {
+                            echo "❗ No test reports found."
+                        }
+
+                        // Publish Jacoco code coverage
+                        jacoco execPattern: '**/target/jacoco.exec'
+                    }
+                }
+            }
+        }
+
+        stage("🔐 SonarQube Static Code Scan") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        withSonarQubeEnv('SonarQube') {
+                            echo '📡 Submitting code to SonarQube...'
+                            sh """
+                                mvn verify sonar:sonar \
+                                    -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                                    -Dsonar.host.url=$SONAR_HOST_URL \
+                                    -Dsonar.login=$SONAR_TOKEN
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🚦 Quality Gate Check") {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("📦 Package Artifact") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        // Add build metadata for traceability
+                        sh "echo 'Build: ${BUILD_NUMBER}, Commit: \$(git rev-parse --short HEAD)' > src/main/resources/build-info.txt"
+                        retry(2) {
+                            sh 'mvn package -DskipTests'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🔍 Static Code Scans (Parallel)") {
+            parallel {
+
+                stage("📦 OWASP Dependency Scan") {
+                    steps {
+                        script {
+                            def serviceDir = "week3/dev-ops/transfer-service"
+                            dir(serviceDir) {
+                                // Fail build if vulnerabilities ≥ CVSS 7
+                                sh 'mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7'
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'week3/dev-ops/transfer-service/target/dependency-check-report.html', allowEmptyArchive: true
+                            publishHTML(target: [
+                                reportDir: 'week3/dev-ops/transfer-service/target',
+                                reportFiles: 'dependency-check-report.html',
+                                reportName: 'OWASP Dependency Report'
+                            ])
+                        }
+                    }
+                }
+
+                stage("🕵️ Bytecode Scan (SpotBugs)") {
+                    steps {
+                        script {
+                            def serviceDir = "week3/dev-ops/transfer-service"
+                            dir(serviceDir) {
+                                sh 'mvn spotbugs:spotbugs spotbugs:check'
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            script {
+                                def xml = 'week3/dev-ops/transfer-service/target/spotbugsXml.xml'
+                                def html = 'week3/dev-ops/transfer-service/target/spotbugs.html'
+
+                                if (fileExists(xml)) {
+                                    // Convert XML to HTML (requires xsltproc and spotbugs.xsl)
+                                    sh "xsltproc spotbugs.xsl ${xml} > ${html} || true"
+
+                                    archiveArtifacts artifacts: html, allowEmptyArchive: true
+                                    publishHTML(target: [
+                                        reportDir: 'week3/dev-ops/transfer-service/target',
+                                        reportFiles: 'spotbugs.html',
+                                        reportName: 'Find Security Bugs Report'
+                                    ])
+                                } else {
+                                    echo "❗ SpotBugs report not found."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🧹 Code Format Check (Spotless)") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        sh 'mvn spotless:check || echo "⚠️ Format issues detected!"'
+                    }
+                }
+            }
+        }
+
+        // Optional: Add Checkmarx or Semgrep here if enabled
+        /*
+        stage("🔐 Checkmarx SAST Scan") {
+            steps {
+                script {
+                    step([$class: 'CxScanBuilder',
+                        credentialsId: 'checkmarx-creds',
+                        serverUrl: 'https://checkmarx.example.com',
+                        projectName: 'transfer-service',
+                        sastEnabled: true,
+                        vulnerabilityThresholdEnabled: true,
+                        vulnerabilityThresholdResult: 'FAILURE',
+                        waitForResultsEnabled: true
+                    ])
+                }
+            }
+        }
+        */
+
+        stage("🚀 Deploy to Nexus") {
+            steps {
+                input message: 'Do you want to deploy?', ok: 'Deploy'
+                withCredentials([file(credentialsId: 'nexus-cred-xml', variable: 'SETTINGS_XML')]) {
+                    script {
+                        def serviceDir = "week3/dev-ops/transfer-service"
+                        dir(serviceDir) {
+                            retry(2) {
+                                sh 'mvn deploy -DskipTests -s $SETTINGS_XML'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("🐳 Docker Build") {
+            steps {
+                script {
+                    def serviceDir = "week3/dev-ops/transfer-service"
+                    dir(serviceDir) {
+                        sh "docker build -t $IMAGE_NAME:${BUILD_NUMBER} ."
+                    }
+                }
+            }
+        }
+
+        stage("🔍 Docker Image Scan") {
+            steps {
+                script {
+                    def imageTag = "$IMAGE_NAME:${BUILD_NUMBER}"
+                    echo "📦 Scanning Docker image: ${imageTag}"
+
+                    // Option 1: Docker scan (Docker Scout)
+                    // sh "docker scan --accept-license ${imageTag} || true"
+
+                    // Option 2: Snyk container scan (if CLI is installed)
+                    // sh "snyk container test ${imageTag} || true"
+
+                    // Skip scan if not available
+                    echo "⚠️ Docker scan step is a placeholder. Integrate Scout, Trivy, or Snyk as needed."
+                }
+            }
+        }
+
+        stage("🚀 Docker Push to Registry") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+                        def imageTag = "$IMAGE_NAME:${BUILD_NUMBER}"
+                        sh "docker push ${imageTag}"
+
+                        // Optionally also tag and push 'latest'
+                        sh "docker tag ${imageTag} $IMAGE_NAME:latest"
+                        sh "docker push $IMAGE_NAME:latest"
+
+                        echo "✅ Pushed Docker images: ${imageTag} and latest"
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo "🧼 Cleaning workspace..."
+            cleanWs()
+        }
+        success {
+            echo "✅ Build #${BUILD_NUMBER} completed successfully."
+            // Optional: Enable Slack notification
+            // slackSend channel: '#ci-cd', message: "✅ transfer-service #${env.BUILD_NUMBER} passed"
+        }
+        failure {
+            echo "❌ Build #${BUILD_NUMBER} failed."
+            // slackSend channel: '#ci-cd', message: "❌ transfer-service #${env.BUILD_NUMBER} failed"
+        }
+    }
+}

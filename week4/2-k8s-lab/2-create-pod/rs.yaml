@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+  labels:
+    app: nginx-rs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+    matchExpressions:
+      - key: city
+        operator: In
+        values:
+          - chennai
+          - hyderabad
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx
+        city: chennai
+        trainer: Nag
+    spec:
+      containers:
+      - name: nginx-container 
+        image: nginx:1.11.7

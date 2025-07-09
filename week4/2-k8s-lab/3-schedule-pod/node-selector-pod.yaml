@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-selector-pod
+spec:
+  nodeSelector:
+    city: mumbai
+  containers:
+  - name: nginx
+    image: nginx
+

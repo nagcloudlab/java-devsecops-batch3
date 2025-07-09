@@ -25,8 +25,9 @@ docker run -d \
 
 ---------------------------------------------
 
--> create pipeline project in jenkins
+-> create pipeline project in jenkins with SCM
 -> confifure sonar & nexus credentials in jenkins server
+-> install sonar-scanner and HTML-publisher plugins
 
 ----------------------------------------------
 
