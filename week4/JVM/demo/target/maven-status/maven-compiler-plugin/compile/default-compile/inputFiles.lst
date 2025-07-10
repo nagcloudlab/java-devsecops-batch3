@@ -1,0 +1,8 @@
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/class_loader/Example.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/memory/heap/HeapStressDemo.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/jit/HotMethodBenchmark.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/memory/metaspace/DynamicMetaspaceFiller.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/class_loader/ClassLoaderDemo.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/class_loader/MyClassLoader.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/class_loader/LoaderTest.java
+/Users/nag/java-devsecops-batch3/week4/JVM/demo/src/main/java/com/example/class_loader/Trigger.java

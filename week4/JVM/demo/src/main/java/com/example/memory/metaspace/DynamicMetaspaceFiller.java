@@ -39,7 +39,6 @@ public class DynamicMetaspaceFiller {
                     ((InMemoryJavaFileObject) javaFile).getBytes());
             Class<?> clazz = loader.loadClass(className);
             Object instance = clazz.getDeclaredConstructor().newInstance();
-
             System.out.println("Loaded class: " + className + " using " + loader);
             loaders.add(loader); // prevent GC
             count++;

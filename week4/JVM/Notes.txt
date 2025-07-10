@@ -1,0 +1,43 @@
+
+
+.java | .scala | .kt | .groovy | .clj -> COMPILE -> .class ( bytecode)
+.class -> JVM ( Java Virtual Machine) -> machine code
+
+JVM is specification, not an implementation
+
+implemented by many vendors
+
+1. Oracle -> HotSpot
+2. Oracle -> GraalVM
+3. Azul -> Azul Zulu
+4. Red Hat -> OpenJ9
+5. Amazon -> Corretto
+....
+
+How to launch JVM?
+---------------------
+
+java -cp <classpath> <main-class> [args]
+
+
+
+JVM architecture
+------------------------
+1. Class Loader Subsystem
+   - Bootstrap Class Loader
+   - Extension Class Loader
+   - Application Class Loader
+   - User-defined Class Loaders
+2. Runtime Data Area aka Memory Area
+   - Method Area
+   - Heap Area
+   - Stack Area
+   - PC Registers
+   - Native Method Stack
+3. Execution Engine
+   - Interpreter
+   - Just-In-Time (JIT) Compiler
+   - Garbage Collector 
+4. Native Interface
+    - Java Native Interface (JNI)
+    - Java Native Access (JNA)

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class MetricsDemoController {
@@ -35,7 +36,7 @@ public class MetricsDemoController {
                 .register(registry);
     }
 
-    @GetMapping("/metrics-demo/login")
+    @GetMapping("/metrics-demo/counter")
     public String simulateLoginSuccess() {
         loginSuccessCounter.increment();
         return "Login success counter incremented!";

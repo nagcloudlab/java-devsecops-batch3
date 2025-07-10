@@ -1,0 +1,16 @@
+
+
+
+Compiled Programming Languages
+
+ -> C, C++, Rust...
+
+ Interpreted Programming Languages
+
+ -> Python, Ruby, JavaScript...
+
+
+ Java ?
+
+    -> compiled to bytecode
+    -> interpreted by JVM

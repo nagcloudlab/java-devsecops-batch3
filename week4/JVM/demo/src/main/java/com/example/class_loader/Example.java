@@ -5,6 +5,7 @@ public class Example {
 
     static {
         System.out.println("Static block executed");
+        a = 100;
     }
 
     public static void main(String[] args) {

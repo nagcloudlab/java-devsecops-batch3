@@ -9,7 +9,7 @@ class LazyLoading {
 public class Trigger {
     public static void main(String[] args) throws ClassNotFoundException {
         System.out.println("Before loading");
-        Class.forName("com.example.cl.LazyLoading"); // Triggers class loading + init
+        Class.forName("com.example.class_loader.LazyLoading"); // Triggers class loading + init
         System.out.println("After loading");
     }
 }

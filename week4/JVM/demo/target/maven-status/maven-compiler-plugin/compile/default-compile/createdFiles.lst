@@ -1,0 +1,12 @@
+com/example/memory/metaspace/DynamicMetaspaceFiller$InMemoryClassLoader.class
+com/example/memory/metaspace/DynamicMetaspaceFiller$InMemoryJavaFileObject.class
+com/example/class_loader/Trigger.class
+com/example/class_loader/LazyLoading.class
+com/example/class_loader/Example.class
+com/example/class_loader/MyClassLoader.class
+com/example/class_loader/ClassLoaderDemo.class
+com/example/memory/metaspace/DynamicMetaspaceFiller$1.class
+com/example/jit/HotMethodBenchmark.class
+com/example/class_loader/LoaderTest.class
+com/example/memory/heap/HeapStressDemo.class
+com/example/memory/metaspace/DynamicMetaspaceFiller.class

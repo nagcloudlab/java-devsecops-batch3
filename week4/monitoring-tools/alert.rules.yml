@@ -1,0 +1,11 @@
+groups:
+  - name: app-alerts
+    rules:
+      - alert: HighLoginSuccessRate
+        expr: rate(login_success_total[1m]) > 5
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High login rate (>5 per minute)"
+          description: "Check for suspicious activity. Too many login successes in the last minute."
